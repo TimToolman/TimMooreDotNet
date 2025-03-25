@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Image Reference</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        p {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .placeholder {
+            width: 400px;
+            height: 400px;
+            background-color: #e0e0e0;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .placeholder img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Profile Image Reference</h1>
+        <p>This is a reference for where to place your profile image. Replace the placeholder below with your actual profile photo (recommended size: 400x400 pixels).</p>
+        
+        <div class="placeholder">
+            <img src="https://via.placeholder.com/400x400.png?text=Tim+Moore" alt="Profile placeholder">
+        </div>
+        
+        <p>To use your own image, save it as "profile.jpg" in the assets folder and update the src attribute in the index.html file.</p>
+    </div>
+</body>
+</html>

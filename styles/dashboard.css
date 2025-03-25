@@ -1,0 +1,218 @@
+/* 
+ * Dashboard Stylesheet for Tim Moore's Personal Website
+ * Apple-inspired design system
+ */
+
+/* Dashboard Section */
+.dashboard-section {
+    min-height: calc(100vh - 64px - 200px); /* Subtract header and approximate footer height */
+    padding: 120px 0 60px;
+    background: linear-gradient(to bottom, #f5f5f7 0%, #ffffff 100%);
+}
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.dashboard-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    margin-top: var(--spacing-xs);
+}
+
+/* Tabs */
+.dashboard-tabs {
+    background-color: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    margin-bottom: var(--spacing-xxl);
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.tabs-header {
+    display: flex;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.tab-button {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.tab-button:hover {
+    color: var(--color-primary);
+}
+
+.tab-button.active {
+    color: var(--color-primary);
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-primary);
+}
+
+.tab-content {
+    padding: var(--spacing-xl);
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Home Assistant Tab */
+.home-assistant-content {
+    text-align: center;
+    padding: var(--spacing-xl) 0;
+}
+
+.home-assistant-content h2 {
+    margin-bottom: var(--spacing-md);
+}
+
+.home-assistant-content p {
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-text-secondary);
+}
+
+/* Jazz Fest Posters Tab */
+.jazzfest-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.jazzfest-header p {
+    color: var(--color-text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.posters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.poster-card {
+    transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.poster-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.poster-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background-color: var(--color-secondary);
+}
+
+.poster-image img {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    transition: transform var(--transition-medium);
+}
+
+.poster-card:hover .poster-image img {
+    transform: scale(1.05);
+}
+
+.sold-out-badge {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-full);
+    z-index: 1;
+}
+
+.poster-info {
+    padding: var(--spacing-md) var(--spacing-xs);
+}
+
+.poster-info h3 {
+    margin-bottom: var(--spacing-xs);
+    font-size: 1.1rem;
+}
+
+.poster-price {
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .dashboard-section {
+        padding: 100px 0 40px;
+    }
+    
+    .tab-content {
+        padding: var(--spacing-lg);
+    }
+    
+    .posters-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    .tabs-header {
+        flex-direction: column;
+    }
+    
+    .tab-button {
+        padding: var(--spacing-md);
+        text-align: center;
+    }
+    
+    .tab-button.active::after {
+        width: 50%;
+        left: 25%;
+    }
+    
+    .posters-grid {
+        grid-template-columns: 1fr;
+    }
+}
