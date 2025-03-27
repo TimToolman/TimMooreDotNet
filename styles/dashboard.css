@@ -110,7 +110,7 @@
 
 .posters-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: var(--spacing-xl);
 }
 
@@ -133,10 +133,12 @@
 }
 
 .poster-image img {
-    width: 100%;
+    width: 50%;
     aspect-ratio: 4/5;
     object-fit: cover;
     transition: transform var(--transition-medium);
+    margin: 0 auto;
+    display: block;
 }
 
 .poster-card:hover .poster-image img {
@@ -192,7 +194,7 @@
     }
     
     .posters-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
         gap: var(--spacing-lg);
     }
 }
