@@ -51,27 +51,43 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    const modal = document.getElementById("imageModal");
-    const modalImage = document.getElementById("modalImage");
-    const closeModal = document.querySelector(".close");
+    const modal = document.getElementById("posterModal");
+    const modalImg = document.getElementById("modalPosterImage");
+    const modalCaption = document.getElementById("modalCaption");
+    const closeModal = document.querySelector(".modal-close");
 
-    // Add click event to all poster images
-    document.querySelectorAll(".poster-image img").forEach((img) => {
+    // Add click event to all poster images within posters-card elements
+    document.querySelectorAll(".posters-card .poster-image img").forEach((img) => {
         img.addEventListener("click", () => {
-            modal.style.display = "block";
-            modalImage.src = img.src;
+            const card = img.closest(".posters-card");
+            const title = card.querySelector(".poster-info h3").textContent;
+            
+            modal.style.display = "flex"; // Use flex for better centering
+            modalImg.src = img.src;
+            modalCaption.textContent = title;
+            document.body.style.overflow = "hidden"; // Disable background scrolling
         });
     });
 
     // Close modal when the close button is clicked
     closeModal.addEventListener("click", () => {
         modal.style.display = "none";
+        document.body.style.overflow = ""; // Re-enable background scrolling
     });
 
     // Close modal when clicking outside the image
     modal.addEventListener("click", (event) => {
         if (event.target === modal) {
             modal.style.display = "none";
+            document.body.style.overflow = ""; // Re-enable background scrolling
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && modal.style.display === "flex") {
+            modal.style.display = "none";
+            document.body.style.overflow = ""; // Re-enable background scrolling
         }
     });
 });
