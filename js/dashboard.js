@@ -49,3 +49,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // Restore active tab on page load
     restoreActiveTab();
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("imageModal");
+    const modalImage = document.getElementById("modalImage");
+    const closeModal = document.querySelector(".close");
+
+    // Add click event to all poster images
+    document.querySelectorAll(".poster-image img").forEach((img) => {
+        img.addEventListener("click", () => {
+            modal.style.display = "block";
+            modalImage.src = img.src;
+        });
+    });
+
+    // Close modal when the close button is clicked
+    closeModal.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    // Close modal when clicking outside the image
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+});
