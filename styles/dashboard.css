@@ -110,7 +110,6 @@
 
 .posters-grid {
     display: grid;
-    align-content: center;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: var(--spacing-xl);
 }
@@ -119,6 +118,7 @@
     transition: transform var(--transition-medium), box-shadow var(--transition-medium);
     border-radius: var(--radius-md);
     padding-top: 10px;
+    align-content: center;
     overflow: hidden;
     outline: 3px solid green;
 }
@@ -127,6 +127,7 @@
     transition: transform var(--transition-medium), box-shadow var(--transition-medium);
     border-radius: var(--radius-md);
     padding-top: 10px;
+    align-content: center;
     overflow: hidden;
     outline: 3px solid rgb(255, 48, 48);
 }
