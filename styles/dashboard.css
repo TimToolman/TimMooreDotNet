@@ -119,6 +119,8 @@
     border-radius: var(--radius-md);
     padding-top: 10px;
     overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
     outline: 3px solid green;
 }
 
@@ -127,6 +129,8 @@
     border-radius: var(--radius-md);
     padding-top: 10px;
     overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
     outline: 3px solid rgb(255, 48, 48);
 }
 
