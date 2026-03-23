@@ -90,4 +90,20 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.style.overflow = ""; // Re-enable background scrolling
         }
     });
+
+    // Make entire poster card clickable
+    document.addEventListener('DOMContentLoaded', function() {
+         const posterCards = document.querySelectorAll('.poster-card, .poster-card-red');
+         posterCards.forEach(function(card) {
+            card.addEventListener('click', function(e) {
+                // Find the img element within this card
+                const img = this.querySelector('.poster-image img');
+                 if (img) {
+                    // Trigger the click on the image (which should open the modal)
+                    img.click();
+                    }
+                });
+            });
+        });
+
 });
