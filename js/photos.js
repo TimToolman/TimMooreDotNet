@@ -1,8 +1,9 @@
 /**
- * Photos JavaScript - loads photos from OneDrive shared folder
+ * Photos JavaScript - loads photos from local images/photos/ folder
  */
 
-const SHARE_URL = 'https://1drv.ms/f/c/ac0b1765bdd9ddbd/IgB7H-73RelQT4hx1O02eiRlAUK4Ab45ZVk3JCmSIVZi5-Y?e=qtUVIU';
+const PHOTOS_DIR = 'images/photos/';
+const MANIFEST = PHOTOS_DIR + 'manifest.json';
 
 let galleryImages = [];
 
@@ -11,37 +12,28 @@ document.addEventListener('DOMContentLoaded', () => {
     initLightbox();
 });
 
-function getShareToken(url) {
-    return btoa('u!' + url).replace(/=+$/, '').replace(/\//g, '_').replace(/\+/g, '-');
-}
-
 async function loadPhotos() {
     const loading = document.getElementById('gallery-loading');
     const errorEl = document.getElementById('gallery-error');
     const grid = document.getElementById('gallery-grid');
 
     try {
-        const token = getShareToken(SHARE_URL);
-        const apiUrl = `https://graph.microsoft.com/v1.0/shares/${token}/driveItem/children?$expand=thumbnails&$top=100`;
+        const res = await fetch(MANIFEST);
+        if (!res.ok) throw new Error('Could not load photo manifest.');
 
-        const res = await fetch(apiUrl);
-        if (!res.ok) throw new Error(`API returned ${res.status}`);
+        const files = await res.json();
 
-        const data = await res.json();
-        const images = (data.value || []).filter(item => item.file && item.file.mimeType && item.file.mimeType.startsWith('image/'));
-
-        if (images.length === 0) {
-            throw new Error('No images found in the shared folder.');
+        if (files.length === 0) {
+            loading.style.display = 'none';
+            errorEl.style.display = 'block';
+            errorEl.textContent = 'No photos found. Add photos to images/photos/ and run generate-photos-manifest.sh.';
+            return;
         }
 
-        galleryImages = images.map(item => {
-            const thumb = item.thumbnails && item.thumbnails[0];
-            return {
-                name: item.name.replace(/\.[^.]+$/, ''),
-                thumbUrl: thumb ? thumb.large.url : item['@microsoft.graph.downloadUrl'],
-                fullUrl: item['@microsoft.graph.downloadUrl']
-            };
-        });
+        galleryImages = files.map(filename => ({
+            name: filename.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
+            url: PHOTOS_DIR + filename
+        }));
 
         loading.style.display = 'none';
 
@@ -50,7 +42,7 @@ async function loadPhotos() {
             div.className = 'gallery-item visible';
             div.innerHTML = `
                 <div class="gallery-image">
-                    <img src="${img.thumbUrl}" alt="${img.name}" loading="lazy">
+                    <img src="${img.url}" alt="${img.name}" loading="lazy">
                     <div class="gallery-overlay">
                         <div class="gallery-info">
                             <h3>${img.name}</h3>
@@ -84,7 +76,7 @@ function initLightbox() {
         if (!galleryImages.length) return;
         currentIndex = index;
         const img = galleryImages[currentIndex];
-        lightboxImage.src = img.fullUrl || img.thumbUrl;
+        lightboxImage.src = img.url;
         lightboxImage.alt = img.name;
         lightboxTitle.textContent = img.name;
         lightboxDescription.textContent = '';
