@@ -147,18 +147,12 @@ function handleFormSubmit() {
         
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
-        const rememberMe = document.getElementById('remember').checked;
-        
-        // In a real application, you would send these credentials to a server
-        // for authentication. For this demo, we'll simulate a successful login
-        // and redirect to the specified URL.
-        
-        console.log('Login attempt:', { username, password, rememberMe });
-        
-        // Simulate API call delay
-        setTimeout(() => {
-            // Redirect to the dashboard page
+
+        if (username === 'Nellie' && password === '171700') {
             window.location.href = 'dashboard.html';
-        }, 1000);
+        } else {
+            const usernameError = document.getElementById('username-error');
+            usernameError.textContent = 'Invalid username or password';
+        }
     });
 }

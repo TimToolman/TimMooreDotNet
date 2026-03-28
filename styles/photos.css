@@ -263,3 +263,17 @@
 .gallery-item.hidden {
     display: none;
 }
+
+.gallery-loading {
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 1.1rem;
+    color: #86868b;
+}
+
+.gallery-error {
+    text-align: center;
+    padding: 40px 20px;
+    color: #ff3b30;
+    font-size: 1rem;
+}
