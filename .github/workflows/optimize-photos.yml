@@ -1,0 +1,87 @@
+name: Optimize Photos & Update Manifests
+
+on:
+  push:
+    paths:
+      - 'images/photos/**'
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Pillow
+        run: pip install Pillow
+
+      - name: Optimize images & update manifests
+        run: |
+          python3 << 'PYEOF'
+          import os, json
+          from PIL import Image, ImageOps
+
+          photos_dir = 'images/photos'
+          exts = ('.jpg', '.jpeg', '.png', '.gif', '.webp')
+
+          for root, dirs, files in os.walk(photos_dir):
+              dirs[:] = [d for d in dirs if not d.startswith('.')]
+              image_files = []
+
+              for fname in files:
+                  if not fname.lower().endswith(exts):
+                      continue
+                  if fname == 'manifest.json':
+                      continue
+
+                  fpath = os.path.join(root, fname)
+                  try:
+                      img = Image.open(fpath)
+                      img = ImageOps.exif_transpose(img)
+
+                      if img.width > 1920 or img.height > 1920:
+                          img.thumbnail((1920, 1920), Image.LANCZOS)
+                          print(f"Resized: {fpath}")
+
+                      # Convert PNG to JPG
+                      if fname.lower().endswith('.png'):
+                          new_fname = fname[:-4] + '.jpg'
+                          new_fpath = os.path.join(root, new_fname)
+                          img.convert('RGB').save(new_fpath, 'JPEG', quality=85, optimize=True)
+                          os.remove(fpath)
+                          print(f"Converted: {fpath} -> {new_fpath}")
+                          image_files.append(new_fname)
+                      else:
+                          img.save(fpath, 'JPEG', quality=85, optimize=True)
+                          image_files.append(fname)
+
+                  except Exception as e:
+                      print(f"Warning: could not process {fname}: {e}")
+                      image_files.append(fname)
+
+              # Write manifest for this directory
+              manifest_path = os.path.join(root, 'manifest.json')
+              with open(manifest_path, 'w') as f:
+                  json.dump(sorted(image_files), f, indent=2)
+              print(f"Manifest: {manifest_path} ({len(image_files)} photos)")
+          PYEOF
+
+      - name: Commit optimized photos & manifests
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add images/photos/
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Auto-optimize photos and update manifests"
+            git push
+          fi
