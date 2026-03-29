@@ -292,24 +292,38 @@
 /* Responsive Styles */
 @media (max-width: 768px) {
     .login-container {
-        max-width: 90%;
+        max-width: 95%;
         padding: var(--spacing-lg);
+        margin: 0 auto;
+    }
+
+    .login-section {
+        padding: 90px 0 40px;
     }
 }
 
 @media (max-width: 480px) {
     .login-section {
-        padding: 100px 0 40px;
+        padding: 80px 0 30px;
     }
-    
+
+    .login-container {
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+    }
+
+    .login-header h1 {
+        font-size: 1.75rem;
+    }
+
     .form-options {
         flex-direction: column;
         align-items: flex-start;
         gap: var(--spacing-sm);
     }
-    
+
     .login-button {
-        margin-top: var(--spacing-md);
+        margin-top: var(--spacing-sm);
     }
 }
 

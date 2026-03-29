@@ -6,9 +6,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize smooth scrolling for anchor links
     initSmoothScroll();
-    
+
     // Initialize header scroll behavior
     initHeaderScroll();
+
+    // Initialize hamburger menu
+    initHamburger();
 });
 
 /**
@@ -94,6 +97,39 @@ function animateOnScroll(selector, animationClass) {
     
     // Check on page load
     checkAnimation();
+}
+
+/**
+ * Initialize hamburger menu for mobile
+ */
+function initHamburger() {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    if (!hamburger || !navLinks) return;
+
+    hamburger.addEventListener('click', () => {
+        const isOpen = navLinks.classList.toggle('open');
+        hamburger.classList.toggle('active', isOpen);
+        hamburger.setAttribute('aria-expanded', isOpen);
+    });
+
+    // Close menu when a nav link is clicked
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('open');
+            hamburger.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+        });
+    });
+
+    // Close menu on resize back to desktop
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            navLinks.classList.remove('open');
+            hamburger.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+        }
+    });
 }
 
 // Add CSS class to header when scrolled
