@@ -8,17 +8,42 @@ const MANIFEST = PHOTOS_DIR + 'manifest.json';
 let galleryImages = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadPhotos();
+    // Sub-tab support (dashboard only)
+    const subtabs = document.querySelectorAll('.photo-subtab-btn');
+    if (subtabs.length) {
+        const firstActive = document.querySelector('.photo-subtab-btn.active');
+        loadPhotos(firstActive ? firstActive.dataset.folder : null);
+
+        subtabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                subtabs.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                loadPhotos(btn.dataset.folder);
+            });
+        });
+    } else {
+        loadPhotos(null);
+    }
+
     initLightbox();
 });
 
-async function loadPhotos() {
+async function loadPhotos(folder) {
     const loading = document.getElementById('gallery-loading');
     const errorEl = document.getElementById('gallery-error');
     const grid = document.getElementById('gallery-grid');
 
+    // Reset state
+    grid.innerHTML = '';
+    errorEl.style.display = 'none';
+    loading.style.display = 'block';
+    galleryImages = [];
+
+    const dir = folder ? folder + '/' : PHOTOS_DIR;
+    const manifest = dir + 'manifest.json';
+
     try {
-        const res = await fetch(MANIFEST);
+        const res = await fetch(manifest);
         if (!res.ok) throw new Error('Could not load photo manifest.');
 
         const files = await res.json();
@@ -26,13 +51,13 @@ async function loadPhotos() {
         if (files.length === 0) {
             loading.style.display = 'none';
             errorEl.style.display = 'block';
-            errorEl.textContent = 'No photos found. Add photos to images/photos/ and run generate-photos-manifest.sh.';
+            errorEl.textContent = 'No photos here yet.';
             return;
         }
 
         galleryImages = files.map(filename => ({
             name: filename.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
-            url: PHOTOS_DIR + filename
+            url: dir + filename
         }));
 
         loading.style.display = 'none';
