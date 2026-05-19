@@ -56,11 +56,11 @@ function initContactForm() {
                 status.classList.add('form-status-success');
                 form.reset();
             } else {
-                status.textContent = result.message || 'Something went wrong. Please try again or use the email button.';
+                status.textContent = result.message || 'Something went wrong. Please try again.';
                 status.classList.add('form-status-error');
             }
         } catch (err) {
-            status.textContent = 'Network error. Please try again or use the email button.';
+            status.textContent = 'Network error. Please try again.';
             status.classList.add('form-status-error');
         } finally {
             sendBtn.disabled = false;
