@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creator - Tim Moore</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">Tim Moore</a>
+            </div>
+            <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links">
+                <li class="has-dropdown">
+                    <a href="index.html">Home</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="executive-pm.html">Executive PM</a></li>
+                        <li><a href="designer.html">Designer</a></li>
+                        <li><a href="ai-enthusiast.html">AI Enthusiast</a></li>
+                        <li><a href="creator.html" class="active">Creator</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </li>
+                <li><a href="login.html" class="login-btn">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="pillar-hero">
+            <div class="container">
+                <a href="index.html" class="back-link">← Back to home</a>
+                <div class="pillar-hero-content">
+                    <div class="pillar-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2l2.4 5 5.6.8-4 4 1 5.7L12 14.8 6.9 17.5l1-5.7-4-4 5.6-.8z"/>
+                        </svg>
+                    </div>
+                    <span class="eyebrow">Creator</span>
+                    <h1>Creator</h1>
+                    <p class="lead">Three patents, a stack of shipped products, and a long-running habit of building things end-to-end — from print-routing algorithms to AI-assisted personal projects.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="container">
+                <h2 class="section-title">By the numbers</h2>
+                <p class="section-subtitle">Output and reach across a long career.</p>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">US patents</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">Companies built at</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">30+</div>
+                        <div class="stat-label">Years creating</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">7,500</div>
+                        <div class="stat-label">Installations supported (Océ)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="container">
+                <h2 class="section-title">Patents</h2>
+                <p class="section-subtitle">Three US patents across print, document management, and workflow.</p>
+                <div class="detail-grid">
+                    <div class="patent-card">
+                        <div class="patent-num">US 11/987,564</div>
+                        <h3>Automatic Job Routing for Wide Format Print Distribution</h3>
+                        <p>An algorithm for routing large-format print jobs across a distributed production network — reducing manual handoffs and increasing throughput.</p>
+                        <div class="patent-meta">
+                            <span>Océ B.V.</span>
+                            <span>Nov 30, 2007</span>
+                        </div>
+                    </div>
+                    <div class="patent-card">
+                        <div class="patent-num">US 60/861,724</div>
+                        <h3>Process of Specifying Print Time Fold Method, Location and Orientation</h3>
+                        <p>A method for declaring fold logic at print time — letting downstream finishing equipment handle complex paper layouts automatically.</p>
+                        <div class="patent-meta">
+                            <span>Océ B.V.</span>
+                            <span>Nov 30, 2006</span>
+                        </div>
+                    </div>
+                    <div class="patent-card">
+                        <div class="patent-num">US 09/954,967</div>
+                        <h3>Publishing and Ordering Documents Through a Centralized Document Management Center</h3>
+                        <p>A SaaS-era pattern for publishing, ordering, and tracking documents through a centralized hub — filed before "SaaS" was even the dominant term.</p>
+                        <div class="patent-meta">
+                            <span>Autodesk, Inc.</span>
+                            <span>Sep 17, 2001</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="container">
+                <h2 class="section-title">Things I've built</h2>
+                <p class="section-subtitle">Products shipped, prototypes prototyped, networks deployed.</p>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <span class="tag-note">Carvana</span>
+                        <h3>Reconditioning operations platform</h3>
+                        <p>The product and tooling behind a national reconditioning network — scaling from 5 to 42 centers while introducing modern data and AI tooling along the way.</p>
+                    </div>
+                    <div class="detail-card">
+                        <span class="tag-note">Amazon</span>
+                        <h3>Worldwide seller-fraud platform</h3>
+                        <p>An SOA risk pipeline at 100k+ TPS, plus a visual investigation app that lifted analyst throughput 87%. Multiple ML models and rule sets in production.</p>
+                    </div>
+                    <div class="detail-card">
+                        <span class="tag-note">WebPT</span>
+                        <h3>Three products in one year</h3>
+                        <p>WebPT Billing, Analytics, and Outcomes — all launched in under twelve months, on a new high-availability AWS platform, while integrating two acquisitions.</p>
+                    </div>
+                    <div class="detail-card">
+                        <span class="tag-note">InEight</span>
+                        <h3>HD Project Intelligence</h3>
+                        <p>A revolutionary self-service BI cloud offering for Oil &amp; Gas, Construction, Energy, and Mining — designed, prototyped, and shipped against a unique multi-segment business model.</p>
+                    </div>
+                    <div class="detail-card">
+                        <span class="tag-note">Océ / Canon</span>
+                        <h3>Global ecommerce in 20 languages</h3>
+                        <p>B2B / B2C ordering, tracking, fulfillment, partner programs, and reporting — built once, localized to 20 languages, deployed across 20+ countries.</p>
+                    </div>
+                    <div class="detail-card">
+                        <span class="tag-note">Personal</span>
+                        <h3>timmoore.net</h3>
+                        <p>This site — hand-built, AI-assisted, Apple-inspired. A small playground for keeping the craft sharp and the curiosity engine warm.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="container">
+                <h2 class="section-title">How I build</h2>
+                <p class="section-subtitle">The shape of a typical idea-to-shipped cycle.</p>
+                <div class="detail-grid">
+                    <div class="detail-card">
+                        <span class="tag-note">Step 01</span>
+                        <h3>Get specific about the problem</h3>
+                        <p>What is broken, for whom, and how do we know it's broken? No idea survives a clear problem statement.</p>
+                    </div>
+                    <div class="detail-card">
+                        <span class="tag-note">Step 02</span>
+                        <h3>Prototype before you commit</h3>
+                        <p>High-fidelity mockups in front of real customers. If they don't lean in, the idea isn't there yet.</p>
+                    </div>
+                    <div class="detail-card">
+                        <span class="tag-note">Step 03</span>
+                        <h3>Ship, measure, iterate</h3>
+                        <p>Production beats perfection. Pick the metric, ship the smallest thing that moves it, and let the data carry the next decision.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="container">
+                <h2 class="section-title">What's next</h2>
+                <p class="section-subtitle">Areas I'm spending creative cycles on right now.</p>
+                <div class="tool-grid">
+                    <div class="tool-pill"><span class="tool-dot"></span><span class="tool-name">AI-native product UX</span></div>
+                    <div class="tool-pill"><span class="tool-dot"></span><span class="tool-name">Agentic tooling</span></div>
+                    <div class="tool-pill"><span class="tool-dot"></span><span class="tool-name">Snowflake + ML pipelines</span></div>
+                    <div class="tool-pill"><span class="tool-dot"></span><span class="tool-name">Modernizing legacy ops</span></div>
+                    <div class="tool-pill"><span class="tool-dot"></span><span class="tool-name">Design + code workflows</span></div>
+                    <div class="tool-pill"><span class="tool-dot"></span><span class="tool-name">Writing &amp; speaking</span></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="index.html">Tim Moore</a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 Tim Moore. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

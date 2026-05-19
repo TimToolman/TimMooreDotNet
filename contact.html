@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Tim Moore</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">Tim Moore</a>
+            </div>
+            <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links">
+                <li class="has-dropdown">
+                    <a href="index.html">Home</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="executive-pm.html">Executive PM</a></li>
+                        <li><a href="designer.html">Designer</a></li>
+                        <li><a href="ai-enthusiast.html">AI Enthusiast</a></li>
+                        <li><a href="creator.html">Creator</a></li>
+                        <li><a href="contact.html" class="active">Contact</a></li>
+                    </ul>
+                </li>
+                <li><a href="login.html" class="login-btn">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="pillar-hero">
+            <div class="container">
+                <a href="index.html" class="back-link">← Back to home</a>
+                <div class="pillar-hero-content">
+                    <div class="pillar-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="4" width="20" height="16" rx="3"/>
+                            <path d="M22 7l-10 7L2 7"/>
+                        </svg>
+                    </div>
+                    <span class="eyebrow">Contact</span>
+                    <h1>Get in touch</h1>
+                    <p class="lead">Have a question, an idea, or want to talk product, AI, or design? Drop me a note — I read every message.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-section">
+            <div class="container">
+                <div class="contact-grid">
+                    <div class="contact-main">
+                        <form id="contact-form" class="contact-form" autocomplete="off">
+                            <!--
+                                Web3Forms — free static form endpoint, no backend required.
+                                Get an access key (instant, free): https://web3forms.com
+                                Enter tgmoore@gmail.com on their site, then paste the key below.
+                            -->
+                            <input type="hidden" name="access_key" value="7fd9eb01-7cd3-4394-8c01-9ab0b3db8fea">
+                            <input type="hidden" name="from_name" value="timmoore.net contact form">
+                            <!-- Honeypot: bots fill this; real users never see it -->
+                            <input type="checkbox" name="botcheck" class="honeypot" tabindex="-1" autocomplete="off">
+
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label for="name">Name</label>
+                                    <input type="text" id="name" name="name" required autocomplete="name">
+                                </div>
+                                <div class="form-field">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email" required autocomplete="email">
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label for="subject">What's this about?</label>
+                                <input type="text" id="subject" name="subject" placeholder="optional">
+                            </div>
+                            <div class="form-field">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" rows="6" required></textarea>
+                            </div>
+                            <button type="submit" class="cta-button" id="send-btn">Send message</button>
+                            <div id="form-status" class="form-status" aria-live="polite"></div>
+                        </form>
+                    </div>
+
+                    <aside class="contact-aside">
+                        <div class="aside-card">
+                            <h3>Or email me directly</h3>
+                            <p>Click below to reveal my address — kept hidden from scrapers by default.</p>
+                            <button type="button" id="reveal-email" class="reveal-btn" data-email="moc.liamg@eroomgt">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                    <path d="M22 6l-10 7L2 6"/>
+                                </svg>
+                                <span>Reveal email address</span>
+                            </button>
+                        </div>
+                        <div class="aside-card">
+                            <h3>Response time</h3>
+                            <p>I typically reply within a day or two. No newsletters, no marketing — just a direct conversation.</p>
+                        </div>
+                        <div class="aside-card">
+                            <h3>On LinkedIn</h3>
+                            <p><a href="https://www.linkedin.com/in/timmooreaz" target="_blank" rel="noopener">linkedin.com/in/timmooreaz</a></p>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="index.html">Tim Moore</a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 Tim Moore. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/contact.js"></script>
+</body>
+</html>

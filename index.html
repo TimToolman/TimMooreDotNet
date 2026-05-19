@@ -19,7 +19,16 @@
                 <span></span><span></span><span></span>
             </button>
             <ul class="nav-links">
-                <li><a href="index.html" class="active">Home</a></li>
+                <li class="has-dropdown">
+                    <a href="index.html" class="active">Home</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="executive-pm.html">Executive PM</a></li>
+                        <li><a href="designer.html">Designer</a></li>
+                        <li><a href="ai-enthusiast.html">AI Enthusiast</a></li>
+                        <li><a href="creator.html">Creator</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </li>
                 <li><a href="login.html" class="login-btn">Login</a></li>
             </ul>
         </nav>
@@ -115,7 +124,7 @@
                 <h2 class="section-title">What I bring to the table</h2>
                 <p class="section-subtitle">A blend of executive product leadership, design sensibility, and applied AI.</p>
                 <div class="pillar-grid">
-                    <article class="pillar-card">
+                    <a class="pillar-card" href="executive-pm.html">
                         <div class="pillar-icon">
                             <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 17l6-6 4 4 8-8"/>
@@ -124,8 +133,9 @@
                         </div>
                         <h3>Executive PM</h3>
                         <p>Setting strategy, aligning teams, and shipping outcomes that move the business.</p>
-                    </article>
-                    <article class="pillar-card">
+                        <span class="pillar-arrow">Learn more <span class="arrow">→</span></span>
+                    </a>
+                    <a class="pillar-card" href="designer.html">
                         <div class="pillar-icon">
                             <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="3" width="18" height="18" rx="3"/>
@@ -134,8 +144,9 @@
                         </div>
                         <h3>Designer</h3>
                         <p>Crafting interfaces and experiences with clarity, restraint, and intentional detail.</p>
-                    </article>
-                    <article class="pillar-card">
+                        <span class="pillar-arrow">Learn more <span class="arrow">→</span></span>
+                    </a>
+                    <a class="pillar-card" href="ai-enthusiast.html">
                         <div class="pillar-icon">
                             <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="5" y="5" width="14" height="14" rx="3"/>
@@ -145,8 +156,9 @@
                         </div>
                         <h3>AI Enthusiast</h3>
                         <p>Applying modern AI to real product problems — pragmatic, measurable, and human-centered.</p>
-                    </article>
-                    <article class="pillar-card">
+                        <span class="pillar-arrow">Learn more <span class="arrow">→</span></span>
+                    </a>
+                    <a class="pillar-card" href="creator.html">
                         <div class="pillar-icon">
                             <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 2l2.4 5 5.6.8-4 4 1 5.7L12 14.8 6.9 17.5l1-5.7-4-4 5.6-.8z"/>
@@ -154,8 +166,17 @@
                         </div>
                         <h3>Creator</h3>
                         <p>Turning ideas into things — products, prototypes, and stories that earn attention.</p>
-                    </article>
+                        <span class="pillar-arrow">Learn more <span class="arrow">→</span></span>
+                    </a>
                 </div>
+            </div>
+        </section>
+
+        <section class="contact-cta">
+            <div class="container">
+                <h2>Let's talk.</h2>
+                <p>Got a product, AI, or design question — or just want to say hello?</p>
+                <a href="contact.html" class="cta-button">Get in touch</a>
             </div>
         </section>
     </main>
@@ -163,9 +184,6 @@
     <footer>
         <div class="container">
             <div class="footer-content">
-                <div class="footer-logo">
-                    <a href="index.html">Tim Moore</a>
-                </div>
             </div>
             <div class="copyright">
                 <p>&copy; 2026 Tim Moore. All rights reserved.</p>
