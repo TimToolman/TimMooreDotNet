@@ -145,7 +145,7 @@ function handleFormSubmit() {
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
-        const username = document.getElementById('username').value;
+        const username = document.getElementById('username').value.trim().toLowerCase();
         const password = document.getElementById('password').value;
 
         if (username === 'tgmoore@gmail.com' && password === 'nellie') {
