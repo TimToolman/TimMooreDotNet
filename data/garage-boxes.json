@@ -1,25 +1,6 @@
 {
-  "updated": "2026-07-05T22:12:27.116963Z",
+  "updated": "2026-07-05T22:13:58.705Z",
   "boxes": [
-    {
-      "id": "box7",
-      "number": 1,
-      "label": "Extension cords & electrical",
-      "note": "",
-      "items": [
-        "Coleman Powermate 400W power inverter (w/ battery clamps)",
-        "Emerie long tape measure (yellow, open reel)",
-        "Yellow extension cord (heavy gauge)",
-        "Yellow extension cord (coiled, velcro strap)",
-        "Orange extension cords (regular and extra long)",
-        "Green extension cords (multiple)",
-        "White extension cords",
-        "Power strips / surge protectors (several)",
-        "3-outlet adapters (green & tan)",
-        "Clear speaker wire (copper)",
-        "Zip ties"
-      ]
-    },
     {
       "id": "box2",
       "number": 2,
@@ -83,12 +64,29 @@
     {
       "id": "box6",
       "number": 6,
-      "label": "Christmas d\u00e9cor",
+      "label": "Christmas décor",
       "note": "",
       "items": [
         "Tiffany & Co. Christmas Tree Topper",
         "2x White & gold nutcracker (pair)",
         "Flocked pine swag with red berries & pinecone"
+      ]
+    },
+    {
+      "id": "box7",
+      "number": 1,
+      "label": "Extension Cords",
+      "note": "",
+      "items": [
+        "Coleman Powermate 400W power inverter (w/ battery clamps)",
+        "Emerie long tape measure (yellow, open reel)",
+        "2x - Yellow extension cord (heavy gauge and regular)",
+        "2x - Orange extension cords (regular and extra long)",
+        "Green extension cords (multiple)",
+        "White extension cords",
+        "Power strips / surge protectors (several)",
+        "3-outlet adapters (green & tan)",
+        "Clear speaker wire (copper)"
       ]
     }
   ]
