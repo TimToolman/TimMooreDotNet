@@ -59,6 +59,15 @@
         boxes = (chosen && chosen.boxes) ? chosen.boxes : [];
         status = 'Saved';
         renderAll();
+
+        // If this device has edits the site never received (made before the
+        // token was set up, or while offline), publish them now.
+        if (chosen === fromLocal && fromSite && (fromLocal.updated || '') > (fromSite.updated || '') &&
+            localStorage.getItem(TOKEN_KEY)) {
+            status = 'Syncing…';
+            renderMeta();
+            ghSave();
+        }
     }
 
     function scheduleSave() {
@@ -116,9 +125,7 @@
         root.className = 'gbx';
         root.innerHTML =
             '<div class="gbx-hero">' +
-            '  <div class="gbx-eyebrow">Metairie garage</div>' +
             '  <h2 class="gbx-headline">What’s in the box?</h2>' +
-            '  <p class="gbx-subhead">Search everything at once, tap a photo to see inside, and edit as things move.</p>' +
             '  <div class="gbx-meta" id="gbx-meta"></div>' +
             '</div>' +
             '<div class="gbx-searchwrap">' +

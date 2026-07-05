@@ -34,44 +34,64 @@ jobs:
 
           for root, dirs, files in os.walk(photos_dir):
               dirs[:] = [d for d in dirs if not d.startswith('.')]
-              image_files = []
+              present = []
 
-              for fname in files:
+              for fname in sorted(files):
                   if not fname.lower().endswith(exts):
-                      continue
-                  if fname == 'manifest.json':
                       continue
 
                   fpath = os.path.join(root, fname)
                   try:
                       img = Image.open(fpath)
-                      img = ImageOps.exif_transpose(img)
+                      needs_resize = img.width > 1920 or img.height > 1920
+                      is_png = fname.lower().endswith('.png')
 
-                      if img.width > 1920 or img.height > 1920:
-                          img.thumbnail((1920, 1920), Image.LANCZOS)
-                          print(f"Resized: {fpath}")
+                      # Only touch files that actually need work, so photos
+                      # already optimized (e.g. uploads from the site's photo
+                      # manager) pass through untouched and this workflow
+                      # makes no commit. GIFs are listed but never re-encoded.
+                      if fname.lower().endswith('.gif'):
+                          present.append(fname)
+                          continue
 
-                      # Convert PNG to JPG
-                      if fname.lower().endswith('.png'):
-                          new_fname = fname[:-4] + '.jpg'
-                          new_fpath = os.path.join(root, new_fname)
-                          img.convert('RGB').save(new_fpath, 'JPEG', quality=85, optimize=True)
-                          os.remove(fpath)
-                          print(f"Converted: {fpath} -> {new_fpath}")
-                          image_files.append(new_fname)
-                      else:
-                          img.save(fpath, 'JPEG', quality=85, optimize=True)
-                          image_files.append(fname)
+                      if needs_resize or is_png:
+                          img = ImageOps.exif_transpose(img)
+                          if needs_resize:
+                              img.thumbnail((1920, 1920), Image.LANCZOS)
+                              print(f"Resized: {fpath}")
+                          if is_png:
+                              new_fname = fname[:-4] + '.jpg'
+                              img.convert('RGB').save(os.path.join(root, new_fname), 'JPEG', quality=85, optimize=True)
+                              os.remove(fpath)
+                              print(f"Converted: {fpath} -> {new_fname}")
+                              fname = new_fname
+                          else:
+                              img.save(fpath, 'JPEG', quality=85, optimize=True)
+                      present.append(fname)
 
                   except Exception as e:
                       print(f"Warning: could not process {fname}: {e}")
-                      image_files.append(fname)
+                      present.append(fname)
 
-              # Write manifest for this directory
+              # Update the manifest but PRESERVE its existing order — the
+              # site's photo manager lets photos be reordered, and that order
+              # lives in the manifest. New files are appended; deleted files
+              # are dropped.
               manifest_path = os.path.join(root, 'manifest.json')
-              with open(manifest_path, 'w') as f:
-                  json.dump(sorted(image_files), f, indent=2)
-              print(f"Manifest: {manifest_path} ({len(image_files)} photos)")
+              order = []
+              if os.path.exists(manifest_path):
+                  try:
+                      with open(manifest_path) as f:
+                          order = json.load(f)
+                  except Exception:
+                      order = []
+              kept = [f for f in order if f in present]
+              added = [f for f in present if f not in kept]
+              result = kept + sorted(added)
+              if result != order:
+                  with open(manifest_path, 'w') as f:
+                      json.dump(result, f, indent=2)
+                  print(f"Manifest updated: {manifest_path} ({len(result)} photos)")
           PYEOF
 
       - name: Commit optimized photos & manifests
