@@ -1,41 +1,26 @@
 {
-  "updated": "2026-07-05T22:14:08.481124Z",
+  "updated": "2026-07-05T22:15:01.941Z",
   "boxes": [
-    {
-      "id": "box7",
-      "number": 1,
-      "label": "Extension Cords &",
-      "note": "",
-      "items": [
-        "Coleman Powermate 400W power inverter (w/ battery clamps)",
-        "Emerie long tape measure (yellow, open reel)",
-        "2x - Yellow extension cord (heavy gauge and regular)",
-        "2x - Orange extension cords (regular and extra long)",
-        "Green extension cords (multiple)",
-        "White extension cords",
-        "Power strips / surge protectors (several)",
-        "3-outlet adapters (green & tan)",
-        "Clear speaker wire (copper)"
-      ]
-    },
     {
       "id": "box2",
       "number": 2,
-      "label": "Paint & finishing supplies",
+      "label": "Paint Supplies",
       "note": "",
       "items": [
-        "Anvil finishing trowel",
+        "Anvil sheetrock mud finishing trowel",
         "3M sandpaper assortment (multiple grits, 180/220)",
         "Purple 3M sanding sheets",
         "Steel wool",
         "Canvas drop cloth",
-        "White fabric / liner"
+        "White fabric / liner",
+        "Paint rollers",
+        "Paint roller pans"
       ]
     },
     {
       "id": "box3",
       "number": 3,
-      "label": "Sports & work gear",
+      "label": "Sports & Work Gear",
       "note": "",
       "items": [
         "Pickleball paddle (new in box)",
@@ -81,12 +66,29 @@
     {
       "id": "box6",
       "number": 6,
-      "label": "Christmas d\u00e9cor",
+      "label": "Christmas décor",
       "note": "",
       "items": [
         "Tiffany & Co. Christmas Tree Topper",
         "2x White & gold nutcracker (pair)",
         "Flocked pine swag with red berries & pinecone"
+      ]
+    },
+    {
+      "id": "box7",
+      "number": 1,
+      "label": "Extension Cords & Strips",
+      "note": "",
+      "items": [
+        "Coleman Powermate 400W power inverter (w/ battery clamps)",
+        "Emerie long tape measure (yellow, open reel)",
+        "2x - Yellow extension cord (heavy gauge and regular)",
+        "2x - Orange extension cords (regular and extra long)",
+        "Green extension cords (multiple)",
+        "White extension cords",
+        "Power strips / surge protectors (several)",
+        "3-outlet adapters (green & tan)",
+        "Clear speaker wire (copper)"
       ]
     }
   ]
