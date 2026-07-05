@@ -1,0 +1,9 @@
+#!/bin/bash
+# When site files change, stamp a fresh version so browsers pick up the new
+# deploy automatically (see bump-version.sh / js/version-check.js).
+if git diff --cached --name-only | grep -qE '\.(css|js|html)$'; then
+    STAMP=$(./bump-version.sh) || exit 1
+    git add ./*.html version.json
+    echo "Site version stamped: $STAMP"
+fi
+exit 0
