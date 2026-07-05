@@ -1,0 +1,32 @@
+#!/bin/bash
+# The website is the source of truth for these files — they are edited from
+# the live site (garage tab, photo manager) or on github.com, and a publish
+# from this machine must never overwrite those edits with a stale local copy.
+PROTECTED=(
+    "data/garage-boxes.json"
+    "data/garage-boxes.csv"
+    "images/photos/manifest.json"
+)
+
+# Deliberate data pushes: ALLOW_DATA_PUSH=1 git push
+[ -n "$ALLOW_DATA_PUSH" ] && exit 0
+
+git fetch origin main --quiet 2>/dev/null
+git rev-parse --verify origin/main >/dev/null 2>&1 || exit 0
+
+changed=$(git diff --name-only origin/main HEAD -- "${PROTECTED[@]}")
+if [ -n "$changed" ]; then
+    echo "" >&2
+    echo "PUSH BLOCKED — these files are managed from the website and this push" >&2
+    echo "would overwrite the web's copy:" >&2
+    echo "$changed" | sed 's/^/    /' >&2
+    echo "" >&2
+    echo "Keep the web versions (recommended):" >&2
+    echo "    git checkout origin/main -- $(echo $changed)" >&2
+    echo "    git commit -m 'keep web data'" >&2
+    echo "" >&2
+    echo "Or, to push local data changes on purpose:" >&2
+    echo "    ALLOW_DATA_PUSH=1 git push" >&2
+    exit 1
+fi
+exit 0

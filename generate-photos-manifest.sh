@@ -43,25 +43,30 @@ PYEOF
 
 generate_manifest() {
     local dir="$1"
-    local manifest="$dir/manifest.json"
-    local files=()
+    # Preserve the existing manifest order (the website's photo manager lets
+    # photos be reordered and stores that order here). New files are appended,
+    # deleted files dropped.
+    python3 - "$dir" << 'PYEOF'
+import json, os, sys
 
-    for f in "$dir"/*.{jpg,jpeg,gif,webp,JPG,JPEG,GIF,WEBP}; do
-        [ -f "$f" ] || continue
-        files+=("\"$(basename "$f")\"")
-    done
-
-    echo "[" > "$manifest"
-    for i in "${!files[@]}"; do
-        if [ $i -lt $((${#files[@]} - 1)) ]; then
-            echo "  ${files[$i]}," >> "$manifest"
-        else
-            echo "  ${files[$i]}" >> "$manifest"
-        fi
-    done
-    echo "]" >> "$manifest"
-
-    echo "  $(basename "$dir"): ${#files[@]} photo(s)"
+d = sys.argv[1]
+exts = ('.jpg', '.jpeg', '.gif', '.webp')
+present = sorted(f for f in os.listdir(d) if f.lower().endswith(exts))
+manifest = os.path.join(d, 'manifest.json')
+order = []
+if os.path.exists(manifest):
+    try:
+        with open(manifest) as fh:
+            order = json.load(fh)
+    except Exception:
+        order = []
+kept = [f for f in order if f in present]
+result = kept + [f for f in present if f not in kept]
+with open(manifest, 'w') as fh:
+    json.dump(result, fh, indent=2)
+    fh.write('\n')
+print(f"  {os.path.basename(d) or d}: {len(result)} photo(s)")
+PYEOF
 }
 
 echo "Optimizing and updating manifests..."
