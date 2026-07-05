@@ -1,0 +1,79 @@
+name: Sync Garage CSV to Site Data
+
+# When data/garage-boxes.csv is edited directly (Excel + push, or on
+# github.com), rebuild data/garage-boxes.json so the site picks it up.
+# Saves made from the site itself commit both files together, so this
+# workflow finds nothing to change and makes no commit in that case.
+
+on:
+  push:
+    paths:
+      - 'data/garage-boxes.csv'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Rebuild JSON from CSV
+        run: |
+          python3 << 'PYEOF'
+          import csv, json, datetime
+
+          with open('data/garage-boxes.csv', newline='', encoding='utf-8-sig') as f:
+              rows = list(csv.DictReader(f))
+
+          boxes = []
+          by_id = {}
+          for row in rows:
+              number = int(float(row['box_number'])) if row.get('box_number', '').strip() else 0
+              box_id = (row.get('box_id') or '').strip() or 'box_' + str(number)
+              if box_id not in by_id:
+                  box = {
+                      'id': box_id,
+                      'number': number,
+                      'label': (row.get('box_label') or '').strip(),
+                      'note': (row.get('box_note') or '').strip(),
+                      'items': [],
+                  }
+                  by_id[box_id] = box
+                  boxes.append(box)
+              item = (row.get('item') or '').strip()
+              if item:
+                  by_id[box_id]['items'].append(item)
+
+          try:
+              with open('data/garage-boxes.json', encoding='utf-8') as f:
+                  current = json.load(f).get('boxes', [])
+          except Exception:
+              current = []
+
+          if boxes == current:
+              print('JSON already matches CSV — nothing to do.')
+          else:
+              snapshot = {
+                  'updated': datetime.datetime.now(datetime.timezone.utc).isoformat().replace('+00:00', 'Z'),
+                  'boxes': boxes,
+              }
+              with open('data/garage-boxes.json', 'w', encoding='utf-8') as f:
+                  json.dump(snapshot, f, indent=2)
+                  f.write('\n')
+              print(f'Rebuilt JSON with {len(boxes)} boxes.')
+          PYEOF
+
+      - name: Commit updated JSON
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/garage-boxes.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Rebuild garage-boxes.json from CSV edit"
+            git push
+          fi

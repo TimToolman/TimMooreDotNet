@@ -12,6 +12,7 @@
     const REPO = 'TimMooreDotNet';
     const BRANCH = 'main';
     const DATA_PATH = 'data/garage-boxes.json';
+    const CSV_PATH = 'data/garage-boxes.csv';
     const TOKEN_KEY = 'ghPhotoToken';
     const LS_KEY = 'garage-box-inventory-v1';
     const API = 'https://api.github.com/repos/' + OWNER + '/' + REPO;
@@ -93,22 +94,9 @@
         try {
             const snapshot = { updated: new Date().toISOString(), boxes: boxes };
             const json = JSON.stringify(snapshot, null, 2) + '\n';
-            const base64 = btoa(unescape(encodeURIComponent(json)));
-            const headers = {
-                Authorization: 'Bearer ' + localStorage.getItem(TOKEN_KEY),
-                Accept: 'application/vnd.github+json'
-            };
-            let sha;
-            const getRes = await fetch(API + '/contents/' + DATA_PATH + '?ref=' + BRANCH, { headers: headers });
-            if (getRes.ok) sha = (await getRes.json()).sha;
-            const payload = { message: 'Update garage boxes', content: base64, branch: BRANCH };
-            if (sha) payload.sha = sha;
-            const putRes = await fetch(API + '/contents/' + DATA_PATH, {
-                method: 'PUT',
-                headers: headers,
-                body: JSON.stringify(payload)
-            });
-            if (!putRes.ok) throw new Error('GitHub ' + putRes.status);
+            await ghPutFile(DATA_PATH, json, 'Update garage boxes');
+            // Keep a permanent, spreadsheet-friendly copy alongside the JSON.
+            await ghPutFile(CSV_PATH, boxesToCsv(), 'Update garage boxes CSV');
             status = 'Saved';
         } catch (err) {
             status = 'Saved on this device — sync failed (' + err.message + ')';
@@ -117,6 +105,58 @@
             renderMeta();
             if (ghDirty) { ghDirty = false; ghSave(); }
         }
+    }
+
+    async function ghPutFile(path, content, message) {
+        const headers = {
+            Authorization: 'Bearer ' + localStorage.getItem(TOKEN_KEY),
+            Accept: 'application/vnd.github+json'
+        };
+        let sha;
+        const getRes = await fetch(API + '/contents/' + path + '?ref=' + BRANCH, { headers: headers });
+        if (getRes.ok) sha = (await getRes.json()).sha;
+        const payload = {
+            message: message,
+            content: btoa(unescape(encodeURIComponent(content))),
+            branch: BRANCH
+        };
+        if (sha) payload.sha = sha;
+        const putRes = await fetch(API + '/contents/' + path, {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify(payload)
+        });
+        if (!putRes.ok) throw new Error('GitHub ' + putRes.status);
+    }
+
+    /* ---------- CSV export ---------- */
+
+    function csvField(v) {
+        v = String(v == null ? '' : v);
+        return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+    }
+
+    function boxesToCsv() {
+        const rows = [['box_id', 'box_number', 'box_label', 'box_note', 'item']];
+        boxes.slice().sort((a, b) => a.number - b.number).forEach(b => {
+            if (b.items.length === 0) {
+                rows.push([b.id, b.number, b.label, b.note, '']);
+            } else {
+                b.items.forEach(it => rows.push([b.id, b.number, b.label, b.note, it]));
+            }
+        });
+        return rows.map(r => r.map(csvField).join(',')).join('\n') + '\n';
+    }
+
+    function downloadCsv() {
+        const blob = new Blob([boxesToCsv()], { type: 'text/csv;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'garage-boxes.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 5000);
     }
 
     /* ---------- skeleton ---------- */
@@ -133,7 +173,10 @@
             '  <button class="gbx-clear" id="gbx-clearbtn" title="Clear search" style="display:none;">✕</button>' +
             '</div>' +
             '<div class="gbx-results-note" id="gbx-note" style="display:none;"></div>' +
-            '<div class="gbx-toolbar"><button class="gbx-addbox" id="gbx-addbox" type="button">+ Add box</button></div>' +
+            '<div class="gbx-toolbar">' +
+            '  <button class="gbx-addbox" id="gbx-downloadcsv" type="button">Download CSV</button>' +
+            '  <button class="gbx-addbox" id="gbx-addbox" type="button">+ Add box</button>' +
+            '</div>' +
             '<div class="gbx-grid" id="gbx-grid"></div>' +
             '<div class="gbx-footer">Changes save automatically. Tap a box number to renumber, the name to rename, ⇄ to move an item, ✕ to remove it, an item’s text to edit it, and any photo to view it full-screen.</div>';
 
@@ -151,6 +194,7 @@
         });
         clearBtn.addEventListener('click', clearSearch);
         root.querySelector('#gbx-addbox').addEventListener('click', addBox);
+        root.querySelector('#gbx-downloadcsv').addEventListener('click', downloadCsv);
     }
 
     function clearSearch() {
