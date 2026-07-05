@@ -220,7 +220,7 @@
 
   /* ---------- Lightbox modal ---------- */
   .gbx-modal {
-    position: fixed; inset: 0; z-index: 200;
+    position: fixed; inset: 0; z-index: 2000;
     background: rgba(0,0,0,0.92);
     display: flex; flex-direction: column;
     touch-action: pan-y; overscroll-behavior: contain;
