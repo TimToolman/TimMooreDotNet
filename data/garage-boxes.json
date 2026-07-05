@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-05T00:00:00.000Z",
+  "updated": "2026-07-05T21:59:59.706Z",
   "boxes": [
     {
       "id": "box1",
@@ -98,13 +98,6 @@
         "Clear speaker wire (copper)",
         "Zip ties"
       ]
-    },
-    {
-      "id": "box8",
-      "number": 8,
-      "label": "Not yet cataloged",
-      "note": "",
-      "items": []
     }
   ]
 }
