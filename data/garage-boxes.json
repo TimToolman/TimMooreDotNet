@@ -1,23 +1,6 @@
 {
-  "updated": "2026-07-05T22:15:11.493703Z",
+  "updated": "2026-07-05T22:16:17.964Z",
   "boxes": [
-    {
-      "id": "box7",
-      "number": 1,
-      "label": "Extension Cords & Strips",
-      "note": "",
-      "items": [
-        "Coleman Powermate 400W power inverter (w/ battery clamps)",
-        "Emerie long tape measure (yellow, open reel)",
-        "2x - Yellow extension cord (heavy gauge and regular)",
-        "2x - Orange extension cords (regular and extra long)",
-        "Green extension cords (multiple)",
-        "White extension cords",
-        "Power strips / surge protectors (several)",
-        "3-outlet adapters (green & tan)",
-        "Clear speaker wire (copper)"
-      ]
-    },
     {
       "id": "box2",
       "number": 2,
@@ -40,12 +23,11 @@
       "label": "Sports & Work Gear",
       "note": "",
       "items": [
-        "Pickleball paddle (new in box)",
-        "Wilson tennis racket (blue/white)",
-        "Wilson tennis racket (red/white strings)",
-        "Everbilt heavy-duty tarp 8 ft",
+        "2x - Pickleball paddles",
+        "2x - Tennis rackets",
+        "Everbilt brown heavy-duty tarp 8 ft",
         "DeWalt work boots (brown)",
-        "Leather strap set / horseshoe accessories"
+        "Baseball glove"
       ]
     },
     {
@@ -83,12 +65,29 @@
     {
       "id": "box6",
       "number": 6,
-      "label": "Christmas d\u00e9cor",
+      "label": "Christmas décor",
       "note": "",
       "items": [
         "Tiffany & Co. Christmas Tree Topper",
         "2x White & gold nutcracker (pair)",
         "Flocked pine swag with red berries & pinecone"
+      ]
+    },
+    {
+      "id": "box7",
+      "number": 1,
+      "label": "Extension Cords & Strips",
+      "note": "",
+      "items": [
+        "Coleman Powermate 400W power inverter (w/ battery clamps)",
+        "Emerie long tape measure (yellow, open reel)",
+        "2x - Yellow extension cord (heavy gauge and regular)",
+        "2x - Orange extension cords (regular and extra long)",
+        "Green extension cords (multiple)",
+        "White extension cords",
+        "Power strips / surge protectors (several)",
+        "3-outlet adapters (green & tan)",
+        "Clear speaker wire (copper)"
       ]
     }
   ]
