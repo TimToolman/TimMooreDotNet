@@ -1,13 +1,6 @@
 {
-  "updated": "2026-07-05T21:59:59.706Z",
+  "updated": "2026-07-05T22:01:22.665Z",
   "boxes": [
-    {
-      "id": "box1",
-      "number": 1,
-      "label": "Not yet cataloged",
-      "note": "Shelved between Box 2 (paint supplies) and the extension cord box",
-      "items": []
-    },
     {
       "id": "box2",
       "number": 2,
