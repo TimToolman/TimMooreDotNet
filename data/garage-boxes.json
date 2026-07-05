@@ -1,0 +1,110 @@
+{
+  "updated": "2026-07-05T00:00:00.000Z",
+  "boxes": [
+    {
+      "id": "box1",
+      "number": 1,
+      "label": "Not yet cataloged",
+      "note": "Shelved between Box 2 (paint supplies) and the extension cord box",
+      "items": []
+    },
+    {
+      "id": "box2",
+      "number": 2,
+      "label": "Paint & finishing supplies",
+      "note": "",
+      "items": [
+        "Anvil finishing trowel",
+        "3M sandpaper assortment (multiple grits, 180/220)",
+        "Purple 3M sanding sheets",
+        "Steel wool",
+        "Canvas drop cloth",
+        "White fabric / liner"
+      ]
+    },
+    {
+      "id": "box3",
+      "number": 3,
+      "label": "Sports & work gear",
+      "note": "",
+      "items": [
+        "Pickleball paddle (new in box)",
+        "Wilson tennis racket (blue/white)",
+        "Wilson tennis racket (red/white strings)",
+        "Everbilt heavy-duty tarp 8 ft",
+        "DeWalt work boots (brown)",
+        "Leather strap set / horseshoe accessories"
+      ]
+    },
+    {
+      "id": "box4",
+      "number": 4,
+      "label": "Hunting gear",
+      "note": "",
+      "items": [
+        "Burlap blind material / camo netting",
+        "ACU digital camo jacket & pants",
+        "Gray drawstring bag (chair/shooting sticks)",
+        "Hunter's Specialties game cleaning gloves",
+        "Scent Killer anti-perspirant & deodorant",
+        "Orange flagging tape",
+        "Orange accessory kit (Duke's)",
+        "Camo gloves",
+        "Knit gloves & socks",
+        "Yellow rain poncho / disposable gear"
+      ]
+    },
+    {
+      "id": "box5",
+      "number": 5,
+      "label": "Bags & coolers",
+      "note": "",
+      "items": [
+        "Maroon & gray duffel bag",
+        "Camo backpack",
+        "LSU soft cooler bag (purple, large)",
+        "LSU soft cooler bag (purple, small)",
+        "Purple & black LSU shoulder bag",
+        "Gray mesh packing cube"
+      ]
+    },
+    {
+      "id": "box6",
+      "number": 6,
+      "label": "Christmas décor",
+      "note": "",
+      "items": [
+        "Tiffany & Co. box",
+        "White & gold nutcracker (pair — #1)",
+        "White & gold nutcracker (pair — #2)",
+        "Flocked pine swag with red berries & pinecone"
+      ]
+    },
+    {
+      "id": "box7",
+      "number": 7,
+      "label": "Extension cords & electrical",
+      "note": "",
+      "items": [
+        "Coleman Powermate 400W power inverter (w/ battery clamps)",
+        "Emerie long tape measure (yellow, open reel)",
+        "Yellow extension cord (heavy gauge)",
+        "Yellow extension cord (coiled, velcro strap)",
+        "Orange extension cords (multiple)",
+        "Green extension cords (multiple)",
+        "White extension cords",
+        "Power strips / surge protectors (several)",
+        "3-outlet adapters (green & tan)",
+        "Clear speaker wire (copper)",
+        "Zip ties"
+      ]
+    },
+    {
+      "id": "box8",
+      "number": 8,
+      "label": "Not yet cataloged",
+      "note": "",
+      "items": []
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+// Photos for garage boxes, keyed by box id (extracted from the original app)
+const GARAGE_PHOTOS = {
+  "box6": [
+    {
+      "src": "images/garage/box6-1.jpg",
+      "caption": "Bin #6 — exterior"
+    },
+    {
+      "src": "images/garage/box6-2.jpg",
+      "caption": "Tiffany box, nutcrackers & swag"
+    }
+  ],
+  "box5": [
+    {
+      "src": "images/garage/box5-1.jpg",
+      "caption": "Bin #5 — exterior"
+    },
+    {
+      "src": "images/garage/box5-2.jpg",
+      "caption": "Duffel, backpack & LSU coolers"
+    }
+  ],
+  "box4": [
+    {
+      "src": "images/garage/box4-1.jpg",
+      "caption": "Bin #4 — exterior"
+    },
+    {
+      "src": "images/garage/box4-2.jpg",
+      "caption": "Burlap blind & ACU camo"
+    },
+    {
+      "src": "images/garage/box4-3.jpg",
+      "caption": "Gloves, Scent Killer & accessories"
+    }
+  ],
+  "box3": [
+    {
+      "src": "images/garage/box3-1.jpg",
+      "caption": "Bin #3 — exterior"
+    },
+    {
+      "src": "images/garage/box3-2.jpg",
+      "caption": "Paddle & rackets"
+    },
+    {
+      "src": "images/garage/box3-3.jpg",
+      "caption": "Tarp & work boots"
+    }
+  ],
+  "box2": [
+    {
+      "src": "images/garage/box2-1.jpg",
+      "caption": "Bin #2 — exterior"
+    },
+    {
+      "src": "images/garage/box2-2.jpg",
+      "caption": "Trowel, sandpaper & drop cloth"
+    }
+  ],
+  "box7": [
+    {
+      "src": "images/garage/box7-1.jpg",
+      "caption": "Inverter & adapters"
+    },
+    {
+      "src": "images/garage/box7-2.jpg",
+      "caption": "Yellow cords & speaker wire"
+    },
+    {
+      "src": "images/garage/box7-3.jpg",
+      "caption": "Orange & green cords"
+    },
+    {
+      "src": "images/garage/box7-4.jpg",
+      "caption": "Coiled cords — full bin"
+    }
+  ]
+};

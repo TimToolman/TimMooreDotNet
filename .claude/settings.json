@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet status --short)",
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet checkout -- login.html js/login.js styles/login.css)",
+      "Bash(git mv *)",
+      "Bash(mv images/photos/oliver/*.jpg images/photos/)",
+      "Bash(node --check js/photo-admin.js)",
+      "Bash(node --check js/photos.js)",
+      "Bash(sed -i '' 's/v=2026-05-19/v=2026-07-05/g' *.html)",
+      "Bash(find . ~/Downloads ~/Desktop -maxdepth 3 -name \"*.jsx\" -mmin -240 2>/dev/null | grep -v node_modules | head; ls -t ~/Downloads 2>/dev/null | head -10)",
+      "Read(//Users/tmoore/Desktop/**)",
+      "Bash(awk '{ print NR\": \"length\\($0\\) }' ~/Downloads/garage-box-lookup.jsx)",
+      "Bash(sort -t: -k2 -rn)",
+      "Bash(node -e ' *)",
+      "Bash(node --check js/garage.js)",
+      "Bash(node --check js/garage-photos.js)",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('data/garage-boxes.json'\\)\\); print\\('data OK:', len\\(d['boxes']\\), 'boxes'\\)\")",
+      "Bash(npm ls *)",
+      "Read(//Applications/**)",
+      "Bash(python3 -)",
+      "Bash(npm init *)",
+      "Bash(npm install *)"
+    ]
+  }
+}

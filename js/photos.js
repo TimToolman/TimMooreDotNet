@@ -3,28 +3,12 @@
  */
 
 const PHOTOS_DIR = 'images/photos/';
-const MANIFEST = PHOTOS_DIR + 'manifest.json';
 
 let galleryImages = [];
+let currentPhotosFolder = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Sub-tab support (dashboard only)
-    const subtabs = document.querySelectorAll('.photo-subtab-btn');
-    if (subtabs.length) {
-        const firstActive = document.querySelector('.photo-subtab-btn.active');
-        loadPhotos(firstActive ? firstActive.dataset.folder : null);
-
-        subtabs.forEach(btn => {
-            btn.addEventListener('click', () => {
-                subtabs.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                loadPhotos(btn.dataset.folder);
-            });
-        });
-    } else {
-        loadPhotos(null);
-    }
-
+    loadPhotos(null);
     initLightbox();
 });
 
@@ -38,51 +22,67 @@ async function loadPhotos(folder) {
     errorEl.style.display = 'none';
     loading.style.display = 'block';
     galleryImages = [];
+    currentPhotosFolder = folder;
 
     const dir = folder ? folder + '/' : PHOTOS_DIR;
     const manifest = dir + 'manifest.json';
 
     try {
-        const res = await fetch(manifest);
+        const res = await fetch(manifest + '?t=' + Date.now());
         if (!res.ok) throw new Error('Could not load photo manifest.');
 
         const files = await res.json();
 
-        if (files.length === 0) {
-            loading.style.display = 'none';
-            errorEl.style.display = 'block';
-            errorEl.textContent = 'No photos here yet.';
-            return;
-        }
+        loading.style.display = 'none';
 
         galleryImages = files.map(filename => ({
             name: filename.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
+            filename: filename,
             url: dir + filename
         }));
 
-        loading.style.display = 'none';
-
-        galleryImages.forEach((img, index) => {
-            const div = document.createElement('div');
-            div.className = 'gallery-item visible';
-            div.innerHTML = `
-                <div class="gallery-image">
-                    <img src="${img.url}" alt="${img.name}" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-info">
-                            <h3>${img.name}</h3>
-                        </div>
-                    </div>
-                </div>`;
-            div.addEventListener('click', () => openLightbox(index));
-            grid.appendChild(div);
-        });
+        renderGallery();
 
     } catch (err) {
         loading.style.display = 'none';
         errorEl.style.display = 'block';
         errorEl.textContent = 'Could not load photos: ' + err.message;
         console.error(err);
+    }
+}
+
+function renderGallery() {
+    const errorEl = document.getElementById('gallery-error');
+    const grid = document.getElementById('gallery-grid');
+
+    grid.innerHTML = '';
+
+    if (galleryImages.length === 0) {
+        errorEl.style.display = 'block';
+        errorEl.textContent = 'No photos here yet.';
+        return;
+    }
+    errorEl.style.display = 'none';
+
+    galleryImages.forEach((img, index) => {
+        const div = document.createElement('div');
+        div.className = 'gallery-item visible';
+        div.innerHTML = `
+            <div class="gallery-image">
+                <img src="${img.url}" alt="${img.name}" loading="lazy">
+                <div class="gallery-overlay">
+                    <div class="gallery-info">
+                        <h3>${img.name}</h3>
+                    </div>
+                </div>
+            </div>`;
+        div.addEventListener('click', () => openLightbox(index));
+        grid.appendChild(div);
+    });
+
+    // Let the photo manager (dashboard only) decorate items with edit controls
+    if (window.photoAdmin && window.photoAdmin.onGalleryRendered) {
+        window.photoAdmin.onGalleryRendered();
     }
 }
 
@@ -99,6 +99,8 @@ function initLightbox() {
 
     window.openLightbox = function(index) {
         if (!galleryImages.length) return;
+        // Suppress the lightbox while editing photos
+        if (window.photoAdmin && window.photoAdmin.isManaging()) return;
         currentIndex = index;
         const img = galleryImages[currentIndex];
         lightboxImage.src = img.url;

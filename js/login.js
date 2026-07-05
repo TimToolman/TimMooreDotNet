@@ -148,7 +148,7 @@ function handleFormSubmit() {
         const username = document.getElementById('username').value.trim().toLowerCase();
         const password = document.getElementById('password').value;
 
-        if (username === 'tgmoore@gmail.com' && password === 'nellie') {
+        if (username === 'tgmoore@gmail.com' && password === 'test1234') {
             window.location.href = 'dashboard.html';
         } else {
             const usernameError = document.getElementById('username-error');
