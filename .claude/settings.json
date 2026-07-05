@@ -35,7 +35,22 @@
       "Bash(sed -i '' \"s|join\\(','\\)\\).join\\('\\\\\\\\\\\\\\\\r\\\\\\\\\\\\\\\\n'\\) + '\\\\\\\\\\\\\\\\r\\\\\\\\\\\\\\\\n';|join\\(','\\)\\).join\\('\\\\\\\\\\\\\\\\n'\\) + '\\\\\\\\\\\\\\\\n';|\" js/garage.js)",
       "Bash(perl -pi -e 's/\\\\r\\\\n/\\\\n/g' data/garage-boxes.csv)",
       "Bash(git commit *)",
-      "Bash(curl -s \"https://timmoore.net/data/garage-boxes.csv?v=$\\(date +%s\\)\")"
+      "Bash(curl -s \"https://timmoore.net/data/garage-boxes.csv?v=$\\(date +%s\\)\")",
+      "Bash(curl -s \"https://timmoore.net/styles/garage.css?v=$\\(date +%s\\)\")",
+      "Bash(chmod +x .githooks/pre-push)",
+      "Bash(git config *)",
+      "Bash(bash -n .githooks/pre-push)",
+      "Bash(bash -n generate-photos-manifest.sh)",
+      "Bash(git commit -q -m 'Guard web-managed data files from local overwrites; local manifest script preserves photo order *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(ALLOW_DATA_PUSH=1 git push --dry-run origin main)",
+      "Bash(git reset *)",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('data/garage-boxes.json'\\)\\); print\\('local now has boxes:', [b['number'] for b in d['boxes']]\\)\")",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('data/garage-boxes.json'\\)\\); print\\('boxes:', [\\(b['number'], b['label']\\) for b in d['boxes']]\\)\")",
+      "Bash(chmod +x bump-version.sh .githooks/pre-commit)",
+      "Bash(python3)",
+      "Bash(./bump-version.sh)",
+      "Bash(git commit -m 'Auto cache-busting: version stamps on all assets + one-shot reload after deploys *)"
     ]
   }
 }
