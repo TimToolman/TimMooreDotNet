@@ -50,7 +50,15 @@
       "Bash(chmod +x bump-version.sh .githooks/pre-commit)",
       "Bash(python3)",
       "Bash(./bump-version.sh)",
-      "Bash(git commit -m 'Auto cache-busting: version stamps on all assets + one-shot reload after deploys *)"
+      "Bash(git commit -m 'Auto cache-busting: version stamps on all assets + one-shot reload after deploys *)",
+      "Skill(claude-api)",
+      "Skill(claude-api:*)",
+      "Bash(node --check /Users/tmoore/Documents/GitHub/TimMooreDotNet/js/garage.js)",
+      "Bash(node --check /Users/tmoore/Documents/GitHub/TimMooreDotNet/js/garage-photos.js)",
+      "Bash(python3 -m http.server 8765)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --no-first-run --virtual-time-budget=6000 --dump-dom \"http://localhost:8765/dashboard.html\")",
+      "Read(//tmp/**)",
+      "Bash(kill %1)"
     ]
   }
 }

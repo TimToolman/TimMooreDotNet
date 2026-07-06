@@ -68,6 +68,14 @@
     transition: background .15s;
   }
   .gbx-addbox:hover { background: var(--bg-subtle); }
+  .gbx-addbox-icon {
+    border: 1px solid var(--divider); background: var(--bg); color: var(--accent);
+    width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+    font-size: 26px; line-height: 1; font-family: inherit;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 0 3px; transition: background .15s;
+  }
+  .gbx-addbox-icon:hover { background: var(--bg-subtle); }
   .gbx-grid {
     max-width: 980px; margin: 14px auto 0; padding: 0 20px 24px;
     display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
@@ -120,6 +128,11 @@
   .gbx-thumb img {
     width: 100%; height: 100%; object-fit: cover; display: block;
   }
+  .gbx-thumb-add {
+    border-style: dashed; color: var(--text-tertiary); font-size: 22px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .gbx-thumb-add:hover { color: var(--accent); }
   .gbx-items { list-style: none; margin: 12px 0 0; padding: 0; }
   .gbx-item {
     display: flex; align-items: center; gap: 4px;
@@ -216,6 +229,7 @@
     border-top: 1px solid var(--divider); padding: 20px 20px 36px;
     text-align: center; font-size: 12px; color: var(--text-secondary);
   }
+  .gbx-footer-actions { margin-top: 14px; }
 
   /* ---------- Lightbox modal ---------- */
   .gbx-modal {
@@ -232,17 +246,28 @@
   .gbx-modal-top {
     flex: none; display: flex; align-items: center; justify-content: space-between;
     padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top));
-    color: #f5f5f7;
+    color: #f5f5f7; gap: 10px;
   }
-  .gbx-modal-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
-  .gbx-modal-counter { font-size: 13px; color: #a1a1a6; margin-top: 1px; }
+  .gbx-modal-titles { flex: 1; min-width: 0; }
+  .gbx-modal-title {
+    font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .gbx-modal-counter {
+    font-size: 13px; color: #a1a1a6; margin-top: 1px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .gbx-modal-status { font-size: 12px; color: #ffd60a; margin-top: 2px; }
+  .gbx-modal-actions { flex: none; display: flex; gap: 8px; }
   .gbx-modal-close {
     border: none; background: rgba(255,255,255,0.14); color: #f5f5f7;
     width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
     font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center;
-    font-family: inherit;
+    font-family: inherit; flex: none;
   }
   .gbx-modal-close:hover { background: rgba(255,255,255,0.24); }
+  .gbx-modal-close:disabled { opacity: 0.4; cursor: default; }
+  .gbx-modal-delphoto:hover { background: rgba(215,0,21,0.75); }
   .gbx-modal-stage {
     flex: 1; min-height: 0; position: relative;
     display: flex; align-items: center; justify-content: center;
@@ -277,8 +302,49 @@
   }
   .gbx-modal-dotthumb.gbx-active { opacity: 1; border-color: #2997ff; }
   .gbx-modal-dotthumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* ---------- AI analysis panel (inside the lightbox) ---------- */
+  .gbx-modal-panel {
+    flex: none; margin: 0 12px 12px;
+    margin-bottom: max(12px, env(safe-area-inset-bottom));
+    padding: 12px 14px; max-height: 45%; overflow-y: auto;
+    background: #1d1d1f; border: 1px solid #3a3a3c; border-radius: 14px;
+    color: #f5f5f7;
+  }
+  .gbx-modal-panel h3 { font-size: 14px; font-weight: 600; margin: 0 0 6px; }
+  .gbx-modal-panel-note { font-size: 12px; color: #a1a1a6; margin: 0 0 8px; }
+  .gbx-modal-panel label {
+    display: block; font-size: 12px; color: #a1a1a6; margin: 10px 0 4px;
+  }
+  .gbx-modal-panel input,
+  .gbx-modal-panel textarea {
+    width: 100%; font-size: 16px; font-family: inherit; color: #f5f5f7;
+    background: #2c2c2e; border: 1px solid #3a3a3c; border-radius: 8px;
+    padding: 8px 10px; outline: none; -webkit-appearance: none;
+  }
+  .gbx-modal-panel input:focus,
+  .gbx-modal-panel textarea:focus { border-color: #2997ff; }
+  .gbx-modal-panel textarea { min-height: 96px; resize: vertical; }
+  .gbx-modal-panel-btns { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .gbx-modal-panel-save {
+    border: none; background: var(--accent); color: #fff;
+    font-size: 14px; font-weight: 500; padding: 8px 18px; min-height: 40px;
+    border-radius: 980px; cursor: pointer; font-family: inherit;
+  }
+  .gbx-modal-panel-save:hover { background: var(--accent-hover); }
+  .gbx-modal-panel-cancel {
+    border: none; background: transparent; color: #a1a1a6;
+    font-size: 14px; cursor: pointer; font-family: inherit; padding: 8px 10px;
+  }
+
   @media (max-width: 600px) {
     .gbx-modal-arrow { width: 44px; height: 44px; }
     .gbx-modal-prev { left: 6px; }
     .gbx-modal-next { right: 6px; }
+    /* Phones: the container + tab + grid paddings stack up — slim them so
+       cards get more usable width. */
+    .gbx-searchwrap { padding: 0 8px; }
+    .gbx-toolbar { padding: 0 8px; }
+    .gbx-grid { padding: 0 8px 24px; }
+    .gbx-card { padding: 16px 14px 10px; }
   }

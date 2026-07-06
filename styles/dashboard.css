@@ -494,6 +494,11 @@
         padding: var(--spacing-md);
     }
 
+    /* Give tab content nearly the full phone width */
+    .tab-content {
+        padding: var(--spacing-md) var(--spacing-xs);
+    }
+
     .tab-button {
         font-size: 0.8rem;
         padding: var(--spacing-sm);

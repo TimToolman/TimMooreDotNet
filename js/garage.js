@@ -13,11 +13,18 @@
     const BRANCH = 'main';
     const DATA_PATH = 'data/garage-boxes.json';
     const CSV_PATH = 'data/garage-boxes.csv';
+    const PHOTOS_DATA_PATH = 'data/garage-photos.json';
+    const PHOTOS_DIR = 'images/garage';
+    const PHOTOS_LS_KEY = 'garage-box-photos-v1';
     const TOKEN_KEY = 'ghPhotoToken';
+    const ANTHROPIC_KEY_KEY = 'anthropicApiKey';
     const LS_KEY = 'garage-box-inventory-v1';
     const API = 'https://api.github.com/repos/' + OWNER + '/' + REPO;
+    const MAX_PHOTO_DIMENSION = 1920;
+    const JPEG_QUALITY = 0.85;
 
     let boxes = null;
+    let photoMap = {};
     let query = '';
     let status = 'Loading…';
     // At most one transient editor is open at a time:
@@ -41,6 +48,7 @@
     /* ---------- data ---------- */
 
     async function loadBoxes() {
+        const photosReady = loadPhotos();
         let fromSite = null;
         let fromLocal = null;
         try {
@@ -59,6 +67,7 @@
         }
         boxes = (chosen && chosen.boxes) ? chosen.boxes : [];
         status = 'Saved';
+        await photosReady;
         renderAll();
 
         // If this device has edits the site never received (made before the
@@ -69,6 +78,52 @@
             renderMeta();
             ghSave();
         }
+    }
+
+    /* ---------- photos data ---------- */
+
+    // Photo edits follow the same pattern as boxes: data/garage-photos.json in
+    // the repo (fetched with a cache-buster) is the source of truth, with a
+    // localStorage copy covering the gap while GitHub Pages deploys. The static
+    // GARAGE_PHOTOS map in js/garage-photos.js is only the seed for first run.
+    async function loadPhotos() {
+        let fromSite = null;
+        let fromLocal = null;
+        try {
+            const res = await fetch(PHOTOS_DATA_PATH + '?t=' + Date.now());
+            if (res.ok) fromSite = await res.json();
+        } catch (e) { /* not published yet or offline */ }
+        try {
+            fromLocal = JSON.parse(localStorage.getItem(PHOTOS_LS_KEY));
+        } catch (e) { /* ignore */ }
+        let chosen = fromSite;
+        if (fromLocal && fromLocal.photos && (!fromSite || (fromLocal.updated || '') >= (fromSite.updated || ''))) {
+            chosen = fromLocal;
+        }
+        photoMap = (chosen && chosen.photos) ? chosen.photos
+            : (typeof GARAGE_PHOTOS !== 'undefined' ? GARAGE_PHOTOS : {});
+    }
+
+    function photosFor(boxId) {
+        if (!photoMap[boxId]) photoMap[boxId] = [];
+        return photoMap[boxId];
+    }
+
+    function cleanPhotoMap() {
+        const out = {};
+        Object.keys(photoMap).forEach(id => {
+            const list = (photoMap[id] || []).map(p => ({ src: p.src, caption: p.caption || '' }));
+            if (list.length) out[id] = list;
+        });
+        return out;
+    }
+
+    async function savePhotoMap(message) {
+        const snapshot = { updated: new Date().toISOString(), photos: cleanPhotoMap() };
+        try {
+            localStorage.setItem(PHOTOS_LS_KEY, JSON.stringify(snapshot));
+        } catch (e) { /* storage full — GitHub save still applies */ }
+        await ghPutFile(PHOTOS_DATA_PATH, JSON.stringify(snapshot, null, 2) + '\n', message);
     }
 
     function scheduleSave() {
@@ -107,26 +162,46 @@
         }
     }
 
-    async function ghPutFile(path, content, message) {
-        const headers = {
+    function ghHeaders() {
+        return {
             Authorization: 'Bearer ' + localStorage.getItem(TOKEN_KEY),
             Accept: 'application/vnd.github+json'
         };
+    }
+
+    async function ghPutFile(path, content, message) {
+        return ghPutBase64(path, btoa(unescape(encodeURIComponent(content))), message);
+    }
+
+    async function ghPutBase64(path, base64, message) {
         let sha;
-        const getRes = await fetch(API + '/contents/' + path + '?ref=' + BRANCH, { headers: headers });
+        const getRes = await fetch(API + '/contents/' + path + '?ref=' + BRANCH, { headers: ghHeaders() });
         if (getRes.ok) sha = (await getRes.json()).sha;
         const payload = {
             message: message,
-            content: btoa(unescape(encodeURIComponent(content))),
+            content: base64,
             branch: BRANCH
         };
         if (sha) payload.sha = sha;
         const putRes = await fetch(API + '/contents/' + path, {
             method: 'PUT',
-            headers: headers,
+            headers: ghHeaders(),
             body: JSON.stringify(payload)
         });
         if (!putRes.ok) throw new Error('GitHub ' + putRes.status);
+    }
+
+    async function ghDeleteFile(path, message) {
+        const getRes = await fetch(API + '/contents/' + path + '?ref=' + BRANCH, { headers: ghHeaders() });
+        if (getRes.status === 404) return; // already gone
+        if (!getRes.ok) throw new Error('GitHub ' + getRes.status);
+        const sha = (await getRes.json()).sha;
+        const res = await fetch(API + '/contents/' + path, {
+            method: 'DELETE',
+            headers: ghHeaders(),
+            body: JSON.stringify({ message: message, sha: sha, branch: BRANCH })
+        });
+        if (!res.ok) throw new Error('GitHub ' + res.status);
     }
 
     /* ---------- CSV export ---------- */
@@ -174,11 +249,11 @@
             '</div>' +
             '<div class="gbx-results-note" id="gbx-note" style="display:none;"></div>' +
             '<div class="gbx-toolbar">' +
-            '  <button class="gbx-addbox" id="gbx-downloadcsv" type="button">Download CSV</button>' +
-            '  <button class="gbx-addbox" id="gbx-addbox" type="button">+ Add box</button>' +
+            '  <button class="gbx-addbox-icon" id="gbx-addbox" type="button" title="Add box" aria-label="Add box">+</button>' +
             '</div>' +
             '<div class="gbx-grid" id="gbx-grid"></div>' +
-            '<div class="gbx-footer">Changes save automatically. Tap a box number to renumber, the name to rename, ⇄ to move an item, ✕ to remove it, an item’s text to edit it, and any photo to view it full-screen.</div>';
+            '<div class="gbx-footer">Changes save automatically. Tap a box number to renumber, the name to rename, ⇄ to move an item, ✕ to remove it, an item’s text to edit it, and any photo to view it full-screen — in the viewer use 📷 to add a photo with the camera and 🗑 to delete one.' +
+            '<div class="gbx-footer-actions"><button class="gbx-addbox" id="gbx-downloadcsv" type="button">Download CSV</button></div></div>';
 
         grid = root.querySelector('#gbx-grid');
         meta = root.querySelector('#gbx-meta');
@@ -278,7 +353,7 @@
     function renderCard(box, q) {
         const card = document.createElement('div');
         card.className = 'gbx-card';
-        const photos = (typeof GARAGE_PHOTOS !== 'undefined' && GARAGE_PHOTOS[box.id]) || [];
+        const photos = photosFor(box.id);
 
         /* head */
         const head = document.createElement('div');
@@ -378,25 +453,47 @@
         addRow.appendChild(addBtn);
         card.appendChild(addRow);
 
-        /* photo thumbnails */
-        if (photos.length) {
-            const thumbs = document.createElement('div');
-            thumbs.className = 'gbx-thumbs';
-            photos.forEach((p, i) => {
-                const b = document.createElement('button');
-                b.className = 'gbx-thumb';
-                b.type = 'button';
-                b.setAttribute('aria-label', 'Open photo ' + (i + 1) + ' of Box ' + box.number);
-                const img = document.createElement('img');
-                img.src = p.src;
-                img.alt = p.caption || 'Box ' + box.number + ' photo';
-                img.loading = 'lazy';
-                b.appendChild(img);
-                b.addEventListener('click', () => openLightboxGbx(box.id, i));
-                thumbs.appendChild(b);
-            });
-            card.appendChild(thumbs);
-        }
+        /* photo thumbnails (+ camera tile so photo-less boxes can get one) */
+        const thumbs = document.createElement('div');
+        thumbs.className = 'gbx-thumbs';
+        photos.forEach((p, i) => {
+            const b = document.createElement('button');
+            b.className = 'gbx-thumb';
+            b.type = 'button';
+            b.setAttribute('aria-label', 'Open photo ' + (i + 1) + ' of Box ' + box.number);
+            const img = document.createElement('img');
+            img.src = p.local || p.src;
+            img.alt = p.caption || 'Box ' + box.number + ' photo';
+            img.loading = 'lazy';
+            b.appendChild(img);
+            b.addEventListener('click', () => openLightboxGbx(box.id, i));
+            thumbs.appendChild(b);
+        });
+        const camInput = document.createElement('input');
+        camInput.type = 'file';
+        camInput.accept = 'image/*';
+        camInput.setAttribute('capture', 'environment');
+        camInput.style.display = 'none';
+        camInput.addEventListener('change', () => {
+            if (camInput.files && camInput.files[0]) addPhotoToBox(box, camInput.files[0]);
+        });
+        const camTile = document.createElement('button');
+        camTile.className = 'gbx-thumb gbx-thumb-add';
+        camTile.type = 'button';
+        camTile.title = 'Add a photo with the camera';
+        camTile.setAttribute('aria-label', 'Add a photo of Box ' + box.number);
+        camTile.textContent = '📷';
+        camTile.addEventListener('click', () => {
+            if (!localStorage.getItem(TOKEN_KEY)) {
+                status = 'To add photos, save the GitHub token first (Photos tab → Manage Photos).';
+                renderMeta();
+                return;
+            }
+            camInput.click();
+        });
+        thumbs.appendChild(camTile);
+        thumbs.appendChild(camInput);
+        card.appendChild(thumbs);
 
         /* footer: delete box */
         const foot = document.createElement('div');
@@ -555,14 +652,23 @@
 
     let lbEl = null;
     let lbKeyHandler = null;
+    let lbBusy = false;
+    let lbStatus = '';
+    // Post-capture AI analysis of the new photo:
+    // { boxId, index, base64, phase: 'needkey'|'running'|'review'|'error', caption, items, error }
+    let lbAnalysis = null;
 
     function openLightboxGbx(boxId, index) {
         lightbox = { boxId: boxId, index: index };
+        lbStatus = '';
+        lbAnalysis = null;
         renderLightbox();
     }
 
     function closeLightboxGbx() {
         lightbox = null;
+        lbStatus = '';
+        lbAnalysis = null;
         if (lbEl) { lbEl.remove(); lbEl = null; }
         if (lbKeyHandler) { document.removeEventListener('keydown', lbKeyHandler); lbKeyHandler = null; }
         document.body.style.overflow = '';
@@ -573,7 +679,7 @@
         if (lbKeyHandler) { document.removeEventListener('keydown', lbKeyHandler); lbKeyHandler = null; }
         if (!lightbox) return;
         const box = boxes.find(b => b.id === lightbox.boxId);
-        const photos = (typeof GARAGE_PHOTOS !== 'undefined' && GARAGE_PHOTOS[lightbox.boxId]) || [];
+        const photos = photosFor(lightbox.boxId);
         if (!box || !photos.length) { closeLightboxGbx(); return; }
         const index = Math.min(lightbox.index, photos.length - 1);
         const photo = photos[index];
@@ -586,16 +692,61 @@
         const top = document.createElement('div');
         top.className = 'gbx-modal-top';
         top.innerHTML =
-            '<div><div class="gbx-modal-title">Box ' + esc(box.number) + ' · ' + esc(box.label) + '</div>' +
+            '<div class="gbx-modal-titles"><div class="gbx-modal-title">Box ' + esc(box.number) + ' · ' + esc(box.label) + '</div>' +
             '<div class="gbx-modal-counter">Photo ' + (index + 1) + ' of ' + photos.length +
-            (photo.caption ? ' — ' + esc(photo.caption) : '') + '</div></div>';
+            (photo.caption ? ' — ' + esc(photo.caption) : '') + '</div>' +
+            (lbStatus ? '<div class="gbx-modal-status">' + esc(lbStatus) + '</div>' : '') +
+            '</div>';
+
+        const actions = document.createElement('div');
+        actions.className = 'gbx-modal-actions';
+
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.setAttribute('capture', 'environment');
+        fileInput.style.display = 'none';
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files && fileInput.files[0]) addPhotoToBox(box, fileInput.files[0]);
+        });
+
+        const addBtn = document.createElement('button');
+        addBtn.className = 'gbx-modal-close gbx-modal-addphoto';
+        addBtn.type = 'button';
+        addBtn.title = 'Take a photo and add it to this box';
+        addBtn.setAttribute('aria-label', 'Add photo with camera');
+        addBtn.textContent = '📷';
+        addBtn.disabled = lbBusy;
+        addBtn.addEventListener('click', () => {
+            if (!localStorage.getItem(TOKEN_KEY)) {
+                lbStatus = 'To add photos, save the GitHub token first (Photos tab → Manage Photos).';
+                renderLightbox();
+                return;
+            }
+            fileInput.click();
+        });
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'gbx-modal-close gbx-modal-delphoto';
+        delBtn.type = 'button';
+        delBtn.title = 'Delete this photo';
+        delBtn.setAttribute('aria-label', 'Delete photo');
+        delBtn.textContent = '🗑';
+        delBtn.disabled = lbBusy;
+        delBtn.addEventListener('click', () => deletePhotoFromBox(box, index));
+
         const closeBtn = document.createElement('button');
         closeBtn.className = 'gbx-modal-close';
         closeBtn.type = 'button';
         closeBtn.setAttribute('aria-label', 'Close');
         closeBtn.textContent = '✕';
         closeBtn.addEventListener('click', closeLightboxGbx);
-        top.appendChild(closeBtn);
+
+        actions.appendChild(addBtn);
+        actions.appendChild(delBtn);
+        actions.appendChild(closeBtn);
+        actions.appendChild(fileInput);
+        top.appendChild(actions);
         lbEl.appendChild(top);
 
         const stage = document.createElement('div');
@@ -616,7 +767,7 @@
         }
         const img = document.createElement('img');
         img.className = 'gbx-modal-img';
-        img.src = photo.src;
+        img.src = photo.local || photo.src;
         img.alt = photo.caption || box.label;
         stage.appendChild(img);
         if (photos.length > 1) {
@@ -650,7 +801,7 @@
                 t.type = 'button';
                 t.setAttribute('aria-label', 'Photo ' + (i + 1));
                 const ti = document.createElement('img');
-                ti.src = p.src;
+                ti.src = p.local || p.src;
                 ti.alt = '';
                 t.appendChild(ti);
                 t.addEventListener('click', () => showIndex(i));
@@ -659,7 +810,13 @@
             lbEl.appendChild(bottom);
         }
 
+        if (lbAnalysis && lbAnalysis.boxId === lightbox.boxId) {
+            lbEl.appendChild(renderAnalysisPanel(box));
+        }
+
         lbKeyHandler = (e) => {
+            const t = e.target;
+            if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
             if (e.key === 'Escape') closeLightboxGbx();
             else if (e.key === 'ArrowLeft') prev();
             else if (e.key === 'ArrowRight') next();
@@ -667,5 +824,309 @@
         document.addEventListener('keydown', lbKeyHandler);
         document.body.style.overflow = 'hidden';
         document.body.appendChild(lbEl);
+    }
+
+    /* ---------- photo add / delete (from the lightbox) ---------- */
+
+    // Decode, downscale, and re-encode a captured photo as JPEG base64.
+    function fileToJpegBase64(file) {
+        return new Promise((resolve, reject) => {
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = () => {
+                URL.revokeObjectURL(url);
+                let w = img.naturalWidth;
+                let h = img.naturalHeight;
+                if (!w || !h) { reject(new Error('empty image')); return; }
+                if (w > MAX_PHOTO_DIMENSION || h > MAX_PHOTO_DIMENSION) {
+                    const scale = MAX_PHOTO_DIMENSION / Math.max(w, h);
+                    w = Math.round(w * scale);
+                    h = Math.round(h * scale);
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = w;
+                canvas.height = h;
+                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                try {
+                    resolve(canvas.toDataURL('image/jpeg', JPEG_QUALITY).split(',')[1]);
+                } catch (e) {
+                    reject(new Error('could not encode image'));
+                }
+            };
+            img.onerror = () => {
+                URL.revokeObjectURL(url);
+                reject(new Error('could not read image — HEIC is not supported, use JPG/PNG'));
+            };
+            img.src = url;
+        });
+    }
+
+    async function addPhotoToBox(box, file) {
+        if (lbBusy) return;
+        lbBusy = true;
+        lbStatus = 'Uploading photo…';
+        lbAnalysis = null;
+        if (lightbox) renderLightbox();
+        else { status = 'Uploading photo…'; renderMeta(); }
+        try {
+            const base64 = await fileToJpegBase64(file);
+            const filename = String(box.id).replace(/[^a-zA-Z0-9_-]/g, '') + '-' + Date.now() + '.jpg';
+            const path = PHOTOS_DIR + '/' + filename;
+            await ghPutBase64(path, base64, 'Add garage photo ' + filename);
+            const photos = photosFor(box.id);
+            photos.push({ src: path, caption: '', local: 'data:image/jpeg;base64,' + base64 });
+            await savePhotoMap('Add ' + filename + ' to garage photos');
+            // Open (or move) the viewer onto the new photo, then offer AI analysis.
+            lightbox = { boxId: box.id, index: photos.length - 1 };
+            status = 'Saved';
+            lbStatus = 'Photo added — other devices update in about a minute.';
+            lbAnalysis = {
+                boxId: box.id,
+                index: photos.length - 1,
+                base64: base64,
+                phase: localStorage.getItem(ANTHROPIC_KEY_KEY) ? 'running' : 'needkey',
+                caption: '',
+                items: '',
+                error: ''
+            };
+        } catch (err) {
+            lbStatus = 'Could not add photo: ' + err.message;
+            if (!lightbox) status = lbStatus;
+        }
+        lbBusy = false;
+        renderLightbox();
+        renderGrid();
+        if (lbAnalysis && lbAnalysis.phase === 'running') runPhotoAnalysis(box);
+    }
+
+    async function deletePhotoFromBox(box, index) {
+        if (lbBusy) return;
+        if (!localStorage.getItem(TOKEN_KEY)) {
+            lbStatus = 'To delete photos, save the GitHub token first (Photos tab → Manage Photos).';
+            renderLightbox();
+            return;
+        }
+        const photos = photosFor(box.id);
+        const photo = photos[index];
+        if (!photo) return;
+        if (!confirm('Delete this photo? This cannot be undone.')) return;
+        lbBusy = true;
+        lbStatus = 'Deleting photo…';
+        lbAnalysis = null;
+        renderLightbox();
+        try {
+            await ghDeleteFile(photo.src, 'Delete garage photo ' + photo.src.split('/').pop());
+            photos.splice(index, 1);
+            await savePhotoMap('Remove a garage photo');
+            lbStatus = '';
+            if (lightbox) lightbox.index = Math.min(index, Math.max(0, photos.length - 1));
+        } catch (err) {
+            lbStatus = 'Could not delete photo: ' + err.message;
+        }
+        lbBusy = false;
+        if (lightbox && !photosFor(lightbox.boxId).length) closeLightboxGbx();
+        else renderLightbox();
+        renderGrid();
+    }
+
+    /* ---------- AI photo analysis ---------- */
+
+    async function runPhotoAnalysis(box) {
+        const a = lbAnalysis;
+        if (!a) return;
+        a.phase = 'running';
+        a.error = '';
+        renderLightbox();
+        try {
+            const res = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': localStorage.getItem(ANTHROPIC_KEY_KEY),
+                    'anthropic-version': '2023-06-01',
+                    'anthropic-dangerous-direct-browser-access': 'true'
+                },
+                body: JSON.stringify({
+                    model: 'claude-opus-4-8',
+                    max_tokens: 1024,
+                    output_config: {
+                        format: {
+                            type: 'json_schema',
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    caption: { type: 'string', description: 'Short caption for the photo, under 8 words' },
+                                    items: {
+                                        type: 'array',
+                                        items: { type: 'string' },
+                                        description: 'Distinct physical items visible in the photo, as short inventory names'
+                                    }
+                                },
+                                required: ['caption', 'items'],
+                                additionalProperties: false
+                            }
+                        }
+                    },
+                    messages: [{
+                        role: 'user',
+                        content: [
+                            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: a.base64 } },
+                            {
+                                type: 'text',
+                                text: 'This photo shows the contents of garage storage bin #' + box.number +
+                                    (box.label ? ' ("' + box.label + '")' : '') +
+                                    '. List the distinct physical items visible, using short names suitable for an inventory list, and write a short caption for the photo.'
+                            }
+                        ]
+                    }]
+                })
+            });
+            if (!res.ok) {
+                let msg = 'API error ' + res.status;
+                try {
+                    const body = await res.json();
+                    if (body.error && body.error.message) msg = body.error.message;
+                } catch (e) { /* keep status message */ }
+                throw new Error(msg);
+            }
+            const data = await res.json();
+            if (data.stop_reason === 'refusal') throw new Error('the model declined to analyze this image');
+            const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+            const parsed = JSON.parse(text);
+            if (!lbAnalysis || lbAnalysis !== a) return; // panel was dismissed meanwhile
+            a.caption = parsed.caption || '';
+            a.items = (parsed.items || []).join('\n');
+            a.phase = 'review';
+        } catch (err) {
+            if (!lbAnalysis || lbAnalysis !== a) return;
+            a.error = err.message;
+            a.phase = 'error';
+        }
+        renderLightbox();
+    }
+
+    async function saveAnalysis(box) {
+        const a = lbAnalysis;
+        if (!a) return;
+        const photos = photosFor(box.id);
+        const photo = photos[a.index];
+        const caption = a.caption.trim();
+        const items = a.items.split('\n').map(s => s.trim()).filter(Boolean);
+        lbAnalysis = null;
+        if (items.length) {
+            items.forEach(it => box.items.push(it));
+            scheduleSave();
+        }
+        lbStatus = items.length
+            ? items.length + (items.length === 1 ? ' item' : ' items') + ' added to Box ' + box.number + '.'
+            : 'Saved.';
+        renderLightbox();
+        renderGrid();
+        if (photo && caption && caption !== (photo.caption || '')) {
+            photo.caption = caption;
+            try {
+                await savePhotoMap('Caption garage photo');
+            } catch (err) {
+                lbStatus = 'Caption sync failed: ' + err.message;
+            }
+            renderLightbox();
+        }
+    }
+
+    function renderAnalysisPanel(box) {
+        const a = lbAnalysis;
+        const panel = document.createElement('div');
+        panel.className = 'gbx-modal-panel';
+
+        const dismiss = (label) => {
+            const b = document.createElement('button');
+            b.className = 'gbx-modal-panel-cancel';
+            b.type = 'button';
+            b.textContent = label;
+            b.addEventListener('click', () => { lbAnalysis = null; renderLightbox(); });
+            return b;
+        };
+
+        if (a.phase === 'needkey') {
+            panel.innerHTML =
+                '<h3>Analyze this photo with AI?</h3>' +
+                '<p class="gbx-modal-panel-note">Paste an Anthropic API key to auto-identify the items in new photos. The key is stored only on this device.</p>';
+            const keyInput = document.createElement('input');
+            keyInput.type = 'password';
+            keyInput.placeholder = 'sk-ant-…';
+            keyInput.autocomplete = 'off';
+            panel.appendChild(keyInput);
+            const btns = document.createElement('div');
+            btns.className = 'gbx-modal-panel-btns';
+            const go = document.createElement('button');
+            go.className = 'gbx-modal-panel-save';
+            go.type = 'button';
+            go.textContent = 'Save key & analyze';
+            go.addEventListener('click', () => {
+                const k = keyInput.value.trim();
+                if (!k) return;
+                localStorage.setItem(ANTHROPIC_KEY_KEY, k);
+                runPhotoAnalysis(box);
+            });
+            btns.appendChild(go);
+            btns.appendChild(dismiss('Skip'));
+            panel.appendChild(btns);
+            return panel;
+        }
+
+        if (a.phase === 'running') {
+            panel.innerHTML = '<h3>Analyzing photo…</h3><p class="gbx-modal-panel-note">Asking AI what’s in this photo.</p>';
+            const btns = document.createElement('div');
+            btns.className = 'gbx-modal-panel-btns';
+            btns.appendChild(dismiss('Cancel'));
+            panel.appendChild(btns);
+            return panel;
+        }
+
+        if (a.phase === 'error') {
+            panel.innerHTML = '<h3>Analysis failed</h3><p class="gbx-modal-panel-note">' + esc(a.error) + '</p>';
+            const btns = document.createElement('div');
+            btns.className = 'gbx-modal-panel-btns';
+            const retry = document.createElement('button');
+            retry.className = 'gbx-modal-panel-save';
+            retry.type = 'button';
+            retry.textContent = 'Retry';
+            retry.addEventListener('click', () => runPhotoAnalysis(box));
+            btns.appendChild(retry);
+            btns.appendChild(dismiss('Dismiss'));
+            panel.appendChild(btns);
+            return panel;
+        }
+
+        // phase === 'review'
+        panel.innerHTML =
+            '<h3>AI photo analysis — is this accurate?</h3>' +
+            '<p class="gbx-modal-panel-note">Edit the caption and items below, then save. Each line becomes an item in Box ' + esc(box.number) + '.</p>';
+        const capLabel = document.createElement('label');
+        capLabel.textContent = 'Photo caption';
+        const capInput = document.createElement('input');
+        capInput.type = 'text';
+        capInput.value = a.caption;
+        capInput.addEventListener('input', () => { a.caption = capInput.value; });
+        const itemsLabel = document.createElement('label');
+        itemsLabel.textContent = 'Detected items (one per line)';
+        const itemsArea = document.createElement('textarea');
+        itemsArea.value = a.items;
+        itemsArea.addEventListener('input', () => { a.items = itemsArea.value; });
+        panel.appendChild(capLabel);
+        panel.appendChild(capInput);
+        panel.appendChild(itemsLabel);
+        panel.appendChild(itemsArea);
+        const btns = document.createElement('div');
+        btns.className = 'gbx-modal-panel-btns';
+        const save = document.createElement('button');
+        save.className = 'gbx-modal-panel-save';
+        save.type = 'button';
+        save.textContent = 'Save to box';
+        save.addEventListener('click', () => saveAnalysis(box));
+        btns.appendChild(save);
+        btns.appendChild(dismiss('Discard'));
+        panel.appendChild(btns);
+        return panel;
     }
 })();
