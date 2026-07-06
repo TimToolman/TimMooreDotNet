@@ -162,6 +162,22 @@
         }
     }
 
+    // The GitHub token lives in this device's localStorage (shared with the
+    // photo manager). If it's missing, ask for it right here — synchronously,
+    // so the file picker can still open in the same tap.
+    function ensureToken() {
+        if (localStorage.getItem(TOKEN_KEY)) return true;
+        const token = (window.prompt(
+            'To save photos and edits, paste your GitHub token (github_pat_…) once for this device.\n\n' +
+            'Create one at github.com → Settings → Developer settings → Fine-grained tokens, ' +
+            'scoped to the TimMooreDotNet repo with Contents: Read and write.') || '').trim();
+        if (!token) return false;
+        localStorage.setItem(TOKEN_KEY, token);
+        status = 'Token saved on this device';
+        renderMeta();
+        return true;
+    }
+
     function ghHeaders() {
         return {
             Authorization: 'Bearer ' + localStorage.getItem(TOKEN_KEY),
@@ -506,10 +522,7 @@
         camTile.setAttribute('aria-label', 'Add a photo of Box ' + box.number);
         camTile.innerHTML = ICONS.camera;
         camTile.addEventListener('click', () => {
-            if (!localStorage.getItem(TOKEN_KEY)) {
-                alert('To add photos, first save the GitHub token on this device: Photos tab → Manage Photos.');
-                return;
-            }
+            if (!ensureToken()) return;
             camInput.click();
         });
         thumbs.appendChild(camTile);
@@ -738,11 +751,7 @@
         addBtn.innerHTML = ICONS.camera;
         addBtn.disabled = lbBusy;
         addBtn.addEventListener('click', () => {
-            if (!localStorage.getItem(TOKEN_KEY)) {
-                lbStatus = 'To add photos, save the GitHub token first (Photos tab → Manage Photos).';
-                renderLightbox();
-                return;
-            }
+            if (!ensureToken()) return;
             fileInput.click();
         });
 
@@ -921,11 +930,7 @@
 
     async function deletePhotoFromBox(box, index) {
         if (lbBusy) return;
-        if (!localStorage.getItem(TOKEN_KEY)) {
-            lbStatus = 'To delete photos, save the GitHub token first (Photos tab → Manage Photos).';
-            renderLightbox();
-            return;
-        }
+        if (!ensureToken()) return;
         const photos = photosFor(box.id);
         const photo = photos[index];
         if (!photo) return;
