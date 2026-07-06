@@ -393,20 +393,37 @@
 
         const headText = document.createElement('div');
         headText.style.cssText = 'flex:1;min-width:0;';
-        const labelInput = document.createElement('input');
-        labelInput.className = 'gbx-label';
-        labelInput.value = box.label;
-        labelInput.placeholder = 'Box name';
-        labelInput.addEventListener('input', () => {
-            box.label = labelInput.value;
-            scheduleSave();
-        });
+        let labelEl;
+        if (uiIs('editLabel', box.id)) {
+            labelEl = document.createElement('input');
+            labelEl.className = 'gbx-label-edit';
+            labelEl.value = box.label;
+            labelEl.placeholder = 'Box name';
+            const commitLabel = () => {
+                const v = labelEl.value.trim();
+                if (v && v !== box.label) { box.label = v; scheduleSave(); }
+                setUi(null);
+            };
+            labelEl.addEventListener('blur', commitLabel);
+            labelEl.addEventListener('keydown', e => {
+                if (e.key === 'Enter') commitLabel();
+                else if (e.key === 'Escape') setUi(null);
+            });
+            setTimeout(() => { labelEl.focus(); labelEl.select(); }, 0);
+        } else {
+            labelEl = document.createElement('div');
+            labelEl.className = 'gbx-label' + (box.label ? '' : ' gbx-label-empty');
+            labelEl.title = 'Tap to rename';
+            if (box.label) labelEl.innerHTML = highlight(box.label, q);
+            else labelEl.textContent = 'Box name';
+            labelEl.addEventListener('click', () => setUi({ type: 'editLabel', boxId: box.id }));
+        }
         const count = document.createElement('div');
         count.className = 'gbx-count';
         count.textContent =
             (box.items.length === 0 ? 'Empty' : box.items.length + (box.items.length === 1 ? ' item' : ' items')) +
             (photos.length ? ' · ' + photos.length + (photos.length === 1 ? ' photo' : ' photos') : '');
-        headText.appendChild(labelInput);
+        headText.appendChild(labelEl);
         headText.appendChild(count);
         head.appendChild(headText);
         card.appendChild(head);
@@ -478,7 +495,6 @@
         const camInput = document.createElement('input');
         camInput.type = 'file';
         camInput.accept = 'image/*';
-        camInput.setAttribute('capture', 'environment');
         camInput.style.display = 'none';
         camInput.addEventListener('change', () => {
             if (camInput.files && camInput.files[0]) addPhotoToBox(box, camInput.files[0]);
@@ -486,13 +502,12 @@
         const camTile = document.createElement('button');
         camTile.className = 'gbx-thumb gbx-thumb-add';
         camTile.type = 'button';
-        camTile.title = 'Add a photo with the camera';
+        camTile.title = 'Add a photo';
         camTile.setAttribute('aria-label', 'Add a photo of Box ' + box.number);
         camTile.innerHTML = ICONS.camera;
         camTile.addEventListener('click', () => {
             if (!localStorage.getItem(TOKEN_KEY)) {
-                status = 'To add photos, save the GitHub token first (Photos tab → Manage Photos).';
-                renderMeta();
+                alert('To add photos, first save the GitHub token on this device: Photos tab → Manage Photos.');
                 return;
             }
             camInput.click();
@@ -710,7 +725,6 @@
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = 'image/*';
-        fileInput.setAttribute('capture', 'environment');
         fileInput.style.display = 'none';
         fileInput.addEventListener('change', () => {
             if (fileInput.files && fileInput.files[0]) addPhotoToBox(box, fileInput.files[0]);
@@ -719,8 +733,8 @@
         const addBtn = document.createElement('button');
         addBtn.className = 'gbx-modal-close gbx-modal-addphoto';
         addBtn.type = 'button';
-        addBtn.title = 'Take a photo and add it to this box';
-        addBtn.setAttribute('aria-label', 'Add photo with camera');
+        addBtn.title = 'Add a photo to this box';
+        addBtn.setAttribute('aria-label', 'Add photo');
         addBtn.innerHTML = ICONS.camera;
         addBtn.disabled = lbBusy;
         addBtn.addEventListener('click', () => {

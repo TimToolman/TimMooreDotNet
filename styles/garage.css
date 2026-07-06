@@ -102,11 +102,20 @@
   }
   .gbx-label {
     font-size: 17px; font-weight: 600; letter-spacing: -0.015em;
-    border: none; background: transparent; width: 100%; outline: none;
-    font-family: inherit; color: var(--text); padding: 2px 0;
-    border-bottom: 1px solid transparent;
+    color: var(--text); padding: 2px 0; cursor: text;
+    border-radius: 4px; overflow-wrap: break-word;
   }
-  .gbx-label:focus { border-bottom-color: var(--accent); }
+  .gbx-label:hover { background: var(--bg-subtle); box-shadow: 0 0 0 3px var(--bg-subtle); }
+  .gbx-label-empty { color: var(--text-tertiary); font-weight: 400; }
+  .gbx-label-edit {
+    font-size: 17px; font-weight: 600; letter-spacing: -0.015em;
+    width: 100%; box-sizing: border-box; font-family: inherit;
+    color: var(--text); background: var(--bg);
+    border: 1px solid var(--accent); border-radius: 6px;
+    padding: 4px 8px; margin: -3px 0 -1px; outline: none;
+    box-shadow: 0 0 0 3px var(--accent-tint);
+    -webkit-appearance: none;
+  }
   .gbx-count { font-size: 12px; color: var(--text-tertiary); margin-top: 1px; }
   .gbx-note {
     margin-top: 12px; font-size: 13px; color: var(--text-secondary);
