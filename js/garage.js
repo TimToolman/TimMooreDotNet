@@ -163,19 +163,14 @@
     }
 
     // The GitHub token lives in this device's localStorage (shared with the
-    // photo manager). If it's missing, ask for it right here — synchronously,
-    // so the file picker can still open in the same tap.
+    // photo manager). If it's missing, show the token panel in the photo
+    // viewer and return false — no window.prompt, which embedded browsers
+    // (VS Code, some webviews) don't implement.
     function ensureToken() {
         if (localStorage.getItem(TOKEN_KEY)) return true;
-        const token = (window.prompt(
-            'To save photos and edits, paste your GitHub token (github_pat_…) once for this device.\n\n' +
-            'Create one at github.com → Settings → Developer settings → Fine-grained tokens, ' +
-            'scoped to the TimMooreDotNet repo with Contents: Read and write.') || '').trim();
-        if (!token) return false;
-        localStorage.setItem(TOKEN_KEY, token);
-        status = 'Token saved on this device';
-        renderMeta();
-        return true;
+        lbNeedToken = true;
+        renderLightbox();
+        return false;
     }
 
     function ghHeaders() {
@@ -268,7 +263,7 @@
             '  <button class="gbx-addbox-icon" id="gbx-addbox" type="button" title="Add box" aria-label="Add box">+</button>' +
             '</div>' +
             '<div class="gbx-grid" id="gbx-grid"></div>' +
-            '<div class="gbx-footer">Changes save automatically. Tap a box number to renumber, the name to rename, ⇄ to move an item, ✕ to remove it, an item’s text to edit it, and any photo to view it full-screen — in the viewer use the camera button to add a photo and the trash button to delete one.' +
+            '<div class="gbx-footer">Changes save automatically. Tap a box number to renumber, the name to rename, ⇄ to move an item, ✕ to remove it, an item’s text to edit it, and any photo to view it full-screen — in the viewer use the camera button to take a photo, the picture button to add one from your library, and the trash button to delete one.' +
             '<div class="gbx-footer-actions"><button class="gbx-addbox" id="gbx-downloadcsv" type="button">Download CSV</button></div></div>';
 
         grid = root.querySelector('#gbx-grid');
@@ -301,8 +296,24 @@
     /* Simple line-style icons (stroke only, inherit button color) */
     const ICONS = {
         camera: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
-        trash: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>'
+        trash: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>',
+        image: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'
     };
+
+    // A hidden file input + tile/button pair. `capture` launches the camera
+    // directly (needed on Android, whose photo picker has no camera option);
+    // without it the picker shows the photo library.
+    function makePhotoInput(withCapture, onFile) {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        if (withCapture) input.setAttribute('capture', 'environment');
+        input.style.display = 'none';
+        input.addEventListener('change', () => {
+            if (input.files && input.files[0]) onFile(input.files[0]);
+        });
+        return input;
+    }
 
     function esc(s) {
         return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -508,25 +519,14 @@
             b.addEventListener('click', () => openLightboxGbx(box.id, i));
             thumbs.appendChild(b);
         });
-        const camInput = document.createElement('input');
-        camInput.type = 'file';
-        camInput.accept = 'image/*';
-        camInput.style.display = 'none';
-        camInput.addEventListener('change', () => {
-            if (camInput.files && camInput.files[0]) addPhotoToBox(box, camInput.files[0]);
-        });
-        const camTile = document.createElement('button');
-        camTile.className = 'gbx-thumb gbx-thumb-add';
-        camTile.type = 'button';
-        camTile.title = 'Add a photo';
-        camTile.setAttribute('aria-label', 'Add a photo of Box ' + box.number);
-        camTile.innerHTML = ICONS.camera;
-        camTile.addEventListener('click', () => {
-            if (!ensureToken()) return;
-            camInput.click();
-        });
-        thumbs.appendChild(camTile);
-        thumbs.appendChild(camInput);
+        const addTile = document.createElement('button');
+        addTile.className = 'gbx-thumb gbx-thumb-add';
+        addTile.type = 'button';
+        addTile.title = 'Add photos';
+        addTile.setAttribute('aria-label', 'Add photos of Box ' + box.number);
+        addTile.innerHTML = ICONS.camera;
+        addTile.addEventListener('click', () => openLightboxGbx(box.id, 0));
+        thumbs.appendChild(addTile);
         card.appendChild(thumbs);
 
         /* footer: delete box */
@@ -688,6 +688,7 @@
     let lbKeyHandler = null;
     let lbBusy = false;
     let lbStatus = '';
+    let lbNeedToken = false;
     // Post-capture AI analysis of the new photo:
     // { boxId, index, base64, phase: 'needkey'|'running'|'review'|'error', caption, items, error }
     let lbAnalysis = null;
@@ -695,6 +696,7 @@
     function openLightboxGbx(boxId, index) {
         lightbox = { boxId: boxId, index: index };
         lbStatus = '';
+        lbNeedToken = false;
         lbAnalysis = null;
         renderLightbox();
     }
@@ -702,6 +704,7 @@
     function closeLightboxGbx() {
         lightbox = null;
         lbStatus = '';
+        lbNeedToken = false;
         lbAnalysis = null;
         if (lbEl) { lbEl.remove(); lbEl = null; }
         if (lbKeyHandler) { document.removeEventListener('keydown', lbKeyHandler); lbKeyHandler = null; }
@@ -714,9 +717,9 @@
         if (!lightbox) return;
         const box = boxes.find(b => b.id === lightbox.boxId);
         const photos = photosFor(lightbox.boxId);
-        if (!box || !photos.length) { closeLightboxGbx(); return; }
-        const index = Math.min(lightbox.index, photos.length - 1);
-        const photo = photos[index];
+        if (!box) { closeLightboxGbx(); return; }
+        const index = photos.length ? Math.min(lightbox.index, photos.length - 1) : 0;
+        const photo = photos.length ? photos[index] : null;
 
         lbEl = document.createElement('div');
         lbEl.className = 'gbx gbx-modal';
@@ -727,32 +730,41 @@
         top.className = 'gbx-modal-top';
         top.innerHTML =
             '<div class="gbx-modal-titles"><div class="gbx-modal-title">Box ' + esc(box.number) + ' · ' + esc(box.label) + '</div>' +
-            '<div class="gbx-modal-counter">Photo ' + (index + 1) + ' of ' + photos.length +
-            (photo.caption ? ' — ' + esc(photo.caption) : '') + '</div>' +
+            '<div class="gbx-modal-counter">' +
+            (photo
+                ? 'Photo ' + (index + 1) + ' of ' + photos.length + (photo.caption ? ' — ' + esc(photo.caption) : '')
+                : 'No photos yet') + '</div>' +
             (lbStatus ? '<div class="gbx-modal-status">' + esc(lbStatus) + '</div>' : '') +
             '</div>';
 
         const actions = document.createElement('div');
         actions.className = 'gbx-modal-actions';
 
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = 'image/*';
-        fileInput.style.display = 'none';
-        fileInput.addEventListener('change', () => {
-            if (fileInput.files && fileInput.files[0]) addPhotoToBox(box, fileInput.files[0]);
-        });
+        const camInput = makePhotoInput(true, f => addPhotoToBox(box, f));
+        const libInput = makePhotoInput(false, f => addPhotoToBox(box, f));
 
         const addBtn = document.createElement('button');
         addBtn.className = 'gbx-modal-close gbx-modal-addphoto';
         addBtn.type = 'button';
-        addBtn.title = 'Add a photo to this box';
-        addBtn.setAttribute('aria-label', 'Add photo');
+        addBtn.title = 'Take a photo and add it to this box';
+        addBtn.setAttribute('aria-label', 'Take a photo');
         addBtn.innerHTML = ICONS.camera;
         addBtn.disabled = lbBusy;
         addBtn.addEventListener('click', () => {
             if (!ensureToken()) return;
-            fileInput.click();
+            camInput.click();
+        });
+
+        const libBtn = document.createElement('button');
+        libBtn.className = 'gbx-modal-close gbx-modal-addphoto';
+        libBtn.type = 'button';
+        libBtn.title = 'Add a photo from the library';
+        libBtn.setAttribute('aria-label', 'Add a photo from the library');
+        libBtn.innerHTML = ICONS.image;
+        libBtn.disabled = lbBusy;
+        libBtn.addEventListener('click', () => {
+            if (!ensureToken()) return;
+            libInput.click();
         });
 
         const delBtn = document.createElement('button');
@@ -761,7 +773,7 @@
         delBtn.title = 'Delete this photo';
         delBtn.setAttribute('aria-label', 'Delete photo');
         delBtn.innerHTML = ICONS.trash;
-        delBtn.disabled = lbBusy;
+        delBtn.disabled = lbBusy || !photo;
         delBtn.addEventListener('click', () => deletePhotoFromBox(box, index));
 
         const closeBtn = document.createElement('button');
@@ -772,11 +784,54 @@
         closeBtn.addEventListener('click', closeLightboxGbx);
 
         actions.appendChild(addBtn);
+        actions.appendChild(libBtn);
         actions.appendChild(delBtn);
         actions.appendChild(closeBtn);
-        actions.appendChild(fileInput);
+        actions.appendChild(camInput);
+        actions.appendChild(libInput);
         top.appendChild(actions);
         lbEl.appendChild(top);
+
+        if (lbNeedToken) {
+            const panel = document.createElement('div');
+            panel.className = 'gbx-modal-tokenpanel';
+            const msg = document.createElement('p');
+            msg.textContent = 'To save photos from this device, paste a GitHub token once. ' +
+                'Create a fine-grained token at github.com → Settings → Developer settings, ' +
+                'scoped to TimMooreDotNet with Contents: Read and write.';
+            const row = document.createElement('div');
+            row.className = 'gbx-modal-tokenrow';
+            const tokenInput = document.createElement('input');
+            tokenInput.type = 'password';
+            tokenInput.placeholder = 'github_pat_…';
+            tokenInput.autocomplete = 'off';
+            const saveBtn = document.createElement('button');
+            saveBtn.type = 'button';
+            saveBtn.textContent = 'Save';
+            const commitToken = () => {
+                const t = tokenInput.value.trim();
+                if (!t) return;
+                localStorage.setItem(TOKEN_KEY, t);
+                lbNeedToken = false;
+                lbStatus = 'Token saved — tap the camera or upload button again.';
+                status = 'Token saved on this device';
+                renderMeta();
+                renderLightbox();
+            };
+            saveBtn.addEventListener('click', commitToken);
+            tokenInput.addEventListener('keydown', e => { if (e.key === 'Enter') commitToken(); });
+            const cancelBtn = document.createElement('button');
+            cancelBtn.type = 'button';
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.addEventListener('click', () => { lbNeedToken = false; renderLightbox(); });
+            row.appendChild(tokenInput);
+            row.appendChild(saveBtn);
+            row.appendChild(cancelBtn);
+            panel.appendChild(msg);
+            panel.appendChild(row);
+            lbEl.appendChild(panel);
+            setTimeout(() => tokenInput.focus(), 0);
+        }
 
         const stage = document.createElement('div');
         stage.className = 'gbx-modal-stage';
@@ -794,11 +849,41 @@
             prevBtn.addEventListener('click', prev);
             stage.appendChild(prevBtn);
         }
-        const img = document.createElement('img');
-        img.className = 'gbx-modal-img';
-        img.src = photo.local || photo.src;
-        img.alt = photo.caption || box.label;
-        stage.appendChild(img);
+        if (photo) {
+            const img = document.createElement('img');
+            img.className = 'gbx-modal-img';
+            img.src = photo.local || photo.src;
+            img.alt = photo.caption || box.label;
+            stage.appendChild(img);
+        } else {
+            const empty = document.createElement('div');
+            empty.className = 'gbx-modal-empty';
+            const msg = document.createElement('p');
+            msg.textContent = 'No photos of this box yet.';
+            empty.appendChild(msg);
+            const btnRow = document.createElement('div');
+            btnRow.className = 'gbx-modal-emptybtns';
+            const takeBtn = document.createElement('button');
+            takeBtn.type = 'button';
+            takeBtn.className = 'gbx-modal-bigbtn';
+            takeBtn.innerHTML = ICONS.camera + '<span>Take a photo</span>';
+            takeBtn.addEventListener('click', () => {
+                if (!ensureToken()) return;
+                camInput.click();
+            });
+            const uploadBtn = document.createElement('button');
+            uploadBtn.type = 'button';
+            uploadBtn.className = 'gbx-modal-bigbtn';
+            uploadBtn.innerHTML = ICONS.image + '<span>Upload a photo</span>';
+            uploadBtn.addEventListener('click', () => {
+                if (!ensureToken()) return;
+                libInput.click();
+            });
+            btnRow.appendChild(takeBtn);
+            btnRow.appendChild(uploadBtn);
+            empty.appendChild(btnRow);
+            stage.appendChild(empty);
+        }
         if (photos.length > 1) {
             const nextBtn = document.createElement('button');
             nextBtn.className = 'gbx-modal-arrow gbx-modal-next';
@@ -949,8 +1034,7 @@
             lbStatus = 'Could not delete photo: ' + err.message;
         }
         lbBusy = false;
-        if (lightbox && !photosFor(lightbox.boxId).length) closeLightboxGbx();
-        else renderLightbox();
+        renderLightbox();
         renderGrid();
     }
 
