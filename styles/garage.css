@@ -129,10 +129,11 @@
     width: 100%; height: 100%; object-fit: cover; display: block;
   }
   .gbx-thumb-add {
-    border-style: dashed; color: var(--text-tertiary); font-size: 22px;
+    border-style: dashed; color: var(--text-tertiary);
     display: flex; align-items: center; justify-content: center;
   }
   .gbx-thumb-add:hover { color: var(--accent); }
+  .gbx-thumb-add svg { width: 22px; height: 22px; display: block; }
   .gbx-items { list-style: none; margin: 12px 0 0; padding: 0; }
   .gbx-item {
     display: flex; align-items: center; gap: 4px;
@@ -267,6 +268,7 @@
   }
   .gbx-modal-close:hover { background: rgba(255,255,255,0.24); }
   .gbx-modal-close:disabled { opacity: 0.4; cursor: default; }
+  .gbx-modal-close svg { width: 20px; height: 20px; display: block; }
   .gbx-modal-delphoto:hover { background: rgba(215,0,21,0.75); }
   .gbx-modal-stage {
     flex: 1; min-height: 0; position: relative;

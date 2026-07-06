@@ -252,7 +252,7 @@
             '  <button class="gbx-addbox-icon" id="gbx-addbox" type="button" title="Add box" aria-label="Add box">+</button>' +
             '</div>' +
             '<div class="gbx-grid" id="gbx-grid"></div>' +
-            '<div class="gbx-footer">Changes save automatically. Tap a box number to renumber, the name to rename, ⇄ to move an item, ✕ to remove it, an item’s text to edit it, and any photo to view it full-screen — in the viewer use 📷 to add a photo with the camera and 🗑 to delete one.' +
+            '<div class="gbx-footer">Changes save automatically. Tap a box number to renumber, the name to rename, ⇄ to move an item, ✕ to remove it, an item’s text to edit it, and any photo to view it full-screen — in the viewer use the camera button to add a photo and the trash button to delete one.' +
             '<div class="gbx-footer-actions"><button class="gbx-addbox" id="gbx-downloadcsv" type="button">Download CSV</button></div></div>';
 
         grid = root.querySelector('#gbx-grid');
@@ -281,6 +281,12 @@
     }
 
     /* ---------- rendering ---------- */
+
+    /* Simple line-style icons (stroke only, inherit button color) */
+    const ICONS = {
+        camera: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
+        trash: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>'
+    };
 
     function esc(s) {
         return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -482,7 +488,7 @@
         camTile.type = 'button';
         camTile.title = 'Add a photo with the camera';
         camTile.setAttribute('aria-label', 'Add a photo of Box ' + box.number);
-        camTile.textContent = '📷';
+        camTile.innerHTML = ICONS.camera;
         camTile.addEventListener('click', () => {
             if (!localStorage.getItem(TOKEN_KEY)) {
                 status = 'To add photos, save the GitHub token first (Photos tab → Manage Photos).';
@@ -715,7 +721,7 @@
         addBtn.type = 'button';
         addBtn.title = 'Take a photo and add it to this box';
         addBtn.setAttribute('aria-label', 'Add photo with camera');
-        addBtn.textContent = '📷';
+        addBtn.innerHTML = ICONS.camera;
         addBtn.disabled = lbBusy;
         addBtn.addEventListener('click', () => {
             if (!localStorage.getItem(TOKEN_KEY)) {
@@ -731,7 +737,7 @@
         delBtn.type = 'button';
         delBtn.title = 'Delete this photo';
         delBtn.setAttribute('aria-label', 'Delete photo');
-        delBtn.textContent = '🗑';
+        delBtn.innerHTML = ICONS.trash;
         delBtn.disabled = lbBusy;
         delBtn.addEventListener('click', () => deletePhotoFromBox(box, index));
 
