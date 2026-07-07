@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T13:18:21.186Z",
+  "updated": "2026-07-07T14:38:11.148Z",
   "boxes": [
     {
       "id": "box7",
@@ -66,7 +66,7 @@
     {
       "id": "box5",
       "number": 5,
-      "label": "Bags & coolers",
+      "label": "Bags & Coolers",
       "note": "",
       "items": [
         "Maroon duffel bag",
@@ -78,7 +78,7 @@
     {
       "id": "box6",
       "number": 6,
-      "label": "Christmas décor",
+      "label": "Christmas Décor",
       "note": "",
       "items": [
         "Tiffany & Co. Christmas Tree Topper",
