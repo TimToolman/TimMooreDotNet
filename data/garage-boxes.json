@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-06T20:22:59.717238Z",
+  "updated": "2026-07-07T13:18:21.186Z",
   "boxes": [
     {
       "id": "box7",
@@ -50,7 +50,7 @@
     {
       "id": "box4",
       "number": 4,
-      "label": "Hunting gear",
+      "label": "Hunting Gear",
       "note": "",
       "items": [
         "Burlap blind material / camo netting",
@@ -78,7 +78,7 @@
     {
       "id": "box6",
       "number": 6,
-      "label": "Christmas d\u00e9cor",
+      "label": "Christmas décor",
       "note": "",
       "items": [
         "Tiffany & Co. Christmas Tree Topper",
