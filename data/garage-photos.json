@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T22:17:24.120Z",
+  "updated": "2026-07-07T22:19:26.241Z",
   "photos": {
     "box6": [
       {
@@ -59,20 +59,6 @@
         "caption": "Trowel, sandpaper & drop cloth"
       }
     ],
-    "box7": [
-      {
-        "src": "images/garage/box7-2.jpg",
-        "caption": "Yellow cords & speaker wire"
-      },
-      {
-        "src": "images/garage/box7-3.jpg",
-        "caption": "Orange & green cords"
-      },
-      {
-        "src": "images/garage/box7-4.jpg",
-        "caption": "Coiled cords — full bin"
-      }
-    ],
     "box_1783462379723": [
       {
         "src": "images/garage/box_1783462379723-1783462569410.jpg",
@@ -80,6 +66,12 @@
       },
       {
         "src": "images/garage/box_1783462379723-1783462620934.jpg",
+        "caption": ""
+      }
+    ],
+    "box7": [
+      {
+        "src": "images/garage/box7-1783462764555.jpg",
         "caption": ""
       }
     ]
