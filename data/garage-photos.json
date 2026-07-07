@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T22:16:11.057Z",
+  "updated": "2026-07-07T22:17:24.120Z",
   "photos": {
     "box6": [
       {
@@ -61,10 +61,6 @@
     ],
     "box7": [
       {
-        "src": "images/garage/box7-1.jpg",
-        "caption": "Inverter & adapters"
-      },
-      {
         "src": "images/garage/box7-2.jpg",
         "caption": "Yellow cords & speaker wire"
       },
@@ -80,6 +76,10 @@
     "box_1783462379723": [
       {
         "src": "images/garage/box_1783462379723-1783462569410.jpg",
+        "caption": ""
+      },
+      {
+        "src": "images/garage/box_1783462379723-1783462620934.jpg",
         "caption": ""
       }
     ]
