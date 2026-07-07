@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T22:13:01.223Z",
+  "updated": "2026-07-07T22:14:15.153Z",
   "boxes": [
     {
       "id": "box7",
@@ -11,7 +11,6 @@
         "2x - Orange extension cords (regular and extra long)",
         "Thin Green extension cords (3)",
         "White extension cords (4)",
-        "Power strips / surge protectors (several)",
         "3-outlet adapters (green & tan)",
         "Clear speaker wire (copper)"
       ]
@@ -96,9 +95,12 @@
     {
       "id": "box_1783462379723",
       "number": 8,
-      "label": "New box",
+      "label": "Electrical Stuff",
       "note": "",
-      "items": []
+      "items": [
+        "Power Strips (5)",
+        "Surge protectors (several)"
+      ]
     }
   ]
 }
