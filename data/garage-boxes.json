@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T22:15:20.479Z",
+  "updated": "2026-07-07T22:17:45.303Z",
   "boxes": [
     {
       "id": "box7",
@@ -101,7 +101,10 @@
         "DC to AC Inverter",
         "Surge protectors (several)",
         "Amp for speakers",
-        "3 prong plugs (6)"
+        "3 prong plugs (6)",
+        "3 way smart plug",
+        "12v battery charger",
+        "Trickel charger"
       ]
     }
   ]
