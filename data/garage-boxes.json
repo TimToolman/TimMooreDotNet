@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T22:11:51.920Z",
+  "updated": "2026-07-07T22:13:01.223Z",
   "boxes": [
     {
       "id": "box7",
@@ -87,6 +87,15 @@
     {
       "id": "box_1783462300213",
       "number": 7,
+      "label": "Christmas & Holiday",
+      "note": "",
+      "items": [
+        "4th of July Bunting"
+      ]
+    },
+    {
+      "id": "box_1783462379723",
+      "number": 8,
       "label": "New box",
       "note": "",
       "items": []
