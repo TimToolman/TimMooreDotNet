@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-06T20:23:22.326Z",
+  "updated": "2026-07-07T22:16:11.057Z",
   "photos": {
     "box6": [
       {
@@ -75,6 +75,12 @@
       {
         "src": "images/garage/box7-4.jpg",
         "caption": "Coiled cords — full bin"
+      }
+    ],
+    "box_1783462379723": [
+      {
+        "src": "images/garage/box_1783462379723-1783462569410.jpg",
+        "caption": ""
       }
     ]
   }
