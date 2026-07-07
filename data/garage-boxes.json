@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T22:10:44.578Z",
+  "updated": "2026-07-07T22:11:51.920Z",
   "boxes": [
     {
       "id": "box7",
@@ -9,8 +9,8 @@
       "items": [
         "Yellow extension cord (heavy gauge)",
         "2x - Orange extension cords (regular and extra long)",
-        "Thin Green extension cords (multiple)",
-        "White extension cords",
+        "Thin Green extension cords (3)",
+        "White extension cords (4)",
         "Power strips / surge protectors (several)",
         "3-outlet adapters (green & tan)",
         "Clear speaker wire (copper)"
@@ -83,6 +83,13 @@
         "2x White & gold nutcracker (pair)",
         "Flocked pine swag with red berries & pinecone"
       ]
+    },
+    {
+      "id": "box_1783462300213",
+      "number": 7,
+      "label": "New box",
+      "note": "",
+      "items": []
     }
   ]
 }
