@@ -154,7 +154,8 @@
             await ghPutFile(CSV_PATH, boxesToCsv(), 'Update garage boxes CSV');
             status = 'Saved';
         } catch (err) {
-            status = 'Saved on this device — sync failed (' + err.message + ')';
+            status = authErrorMessage(err) ||
+                ('Saved on this device — sync failed (' + err.message + ')');
         } finally {
             ghSaving = false;
             renderMeta();
@@ -171,6 +172,15 @@
         lbNeedToken = true;
         renderLightbox();
         return false;
+    }
+
+    // A 401 means the stored token expired or was revoked. Drop it so the
+    // token panel reappears, and return the message to show the user.
+    function authErrorMessage(err) {
+        if (!/GitHub 401/.test(err && err.message)) return null;
+        localStorage.removeItem(TOKEN_KEY);
+        lbNeedToken = true;
+        return 'GitHub token expired or revoked — paste a new one to keep syncing.';
     }
 
     function ghHeaders() {
@@ -259,10 +269,10 @@
             '  <button class="gbx-clear" id="gbx-clearbtn" title="Clear search" style="display:none;">✕</button>' +
             '</div>' +
             '<div class="gbx-results-note" id="gbx-note" style="display:none;"></div>' +
+            '<div class="gbx-grid" id="gbx-grid"></div>' +
             '<div class="gbx-toolbar">' +
             '  <button class="gbx-addbox-icon" id="gbx-addbox" type="button" title="Add box" aria-label="Add box">+</button>' +
             '</div>' +
-            '<div class="gbx-grid" id="gbx-grid"></div>' +
             '<div class="gbx-footer">Changes save automatically. Tap a box number to renumber, the name to rename, ⇄ to move an item, ✕ to remove it, an item’s text to edit it, and any photo to view it full-screen — in the viewer use the camera button to take a photo, the picture button to add one from your library, and the trash button to delete one.' +
             '<div class="gbx-footer-actions"><button class="gbx-addbox" id="gbx-downloadcsv" type="button">Download CSV</button></div></div>';
 
@@ -1004,7 +1014,7 @@
                 error: ''
             };
         } catch (err) {
-            lbStatus = 'Could not add photo: ' + err.message;
+            lbStatus = authErrorMessage(err) || ('Could not add photo: ' + err.message);
             if (!lightbox) status = lbStatus;
         }
         lbBusy = false;
@@ -1031,7 +1041,7 @@
             lbStatus = '';
             if (lightbox) lightbox.index = Math.min(index, Math.max(0, photos.length - 1));
         } catch (err) {
-            lbStatus = 'Could not delete photo: ' + err.message;
+            lbStatus = authErrorMessage(err) || ('Could not delete photo: ' + err.message);
         }
         lbBusy = false;
         renderLightbox();
@@ -1090,6 +1100,12 @@
                     }]
                 })
             });
+            if (res.status === 401) {
+                // Stored key is invalid or revoked — drop it and re-show the key panel.
+                localStorage.removeItem(ANTHROPIC_KEY_KEY);
+                if (lbAnalysis === a) { a.phase = 'needkey'; renderLightbox(); }
+                return;
+            }
             if (!res.ok) {
                 let msg = 'API error ' + res.status;
                 try {

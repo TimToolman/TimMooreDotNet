@@ -58,7 +58,20 @@
       "Bash(python3 -m http.server 8765)",
       "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --no-first-run --virtual-time-budget=6000 --dump-dom \"http://localhost:8765/dashboard.html\")",
       "Read(//tmp/**)",
-      "Bash(kill %1)"
+      "Bash(kill %1)",
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet pull)",
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet fetch --all)",
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet log --oneline -5 origin/main)",
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet log --oneline -8 -- data/garage-boxes.csv)",
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet log --oneline -3 HEAD)",
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet status -sb)",
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet log -1 --format='%h %ad %s' -- data/garage-boxes.csv)",
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet show --stat e7d8751 0923131)",
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet show e7d8751)",
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet show acda5aa ae48588)",
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet check-ignore -v api-keys.local.csv)",
+      "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet status -s)",
+      "Bash(node --check /Users/tmoore/Documents/GitHub/TimMooreDotNet/js/version-check.js)"
     ]
   }
 }

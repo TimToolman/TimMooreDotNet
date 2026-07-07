@@ -1,0 +1,2 @@
+# Local secrets — never commit. This CSV holds personal API keys.
+api-keys.local.csv
