@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T22:19:26.241Z",
+  "updated": "2026-07-07T22:20:41.204Z",
   "photos": {
     "box6": [
       {
@@ -67,11 +67,19 @@
       {
         "src": "images/garage/box_1783462379723-1783462620934.jpg",
         "caption": ""
+      },
+      {
+        "src": "images/garage/box_1783462379723-1783462803241.jpg",
+        "caption": ""
       }
     ],
     "box7": [
       {
         "src": "images/garage/box7-1783462764555.jpg",
+        "caption": ""
+      },
+      {
+        "src": "images/garage/box7-1783462773376.jpg",
         "caption": ""
       }
     ]
