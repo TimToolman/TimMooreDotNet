@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T22:14:15.153Z",
+  "updated": "2026-07-07T22:15:20.479Z",
   "boxes": [
     {
       "id": "box7",
@@ -98,8 +98,10 @@
       "label": "Electrical Stuff",
       "note": "",
       "items": [
-        "Power Strips (5)",
-        "Surge protectors (several)"
+        "DC to AC Inverter",
+        "Surge protectors (several)",
+        "Amp for speakers",
+        "3 prong plugs (6)"
       ]
     }
   ]
