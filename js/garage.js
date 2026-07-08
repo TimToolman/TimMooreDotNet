@@ -271,9 +271,9 @@
             '<div class="gbx-results-note" id="gbx-note" style="display:none;"></div>' +
             '<div class="gbx-grid" id="gbx-grid"></div>' +
             '<div class="gbx-toolbar">' +
-            '  <button class="gbx-addbox-icon" id="gbx-addbox" type="button" title="Add box" aria-label="Add box">+</button>' +
+            '  <button class="gbx-addbox-icon" id="gbx-addbox" type="button" title="Add box" aria-label="Add box"><span class="gbx-addbox-plus">+</span><span class="gbx-addbox-text">Add Box</span></button>' +
             '</div>' +
-            '<div class="gbx-footer">Changes save automatically. Tap a box number to renumber, the name to rename, ⇄ to move an item, ✕ to remove it, an item’s text to edit it, and any photo to view it full-screen — in the viewer use the camera button to take a photo, the picture button to add one from your library, and the trash button to delete one.' +
+            '<div class="gbx-footer">Changes save automatically. Tap a box number to renumber, the name to rename, ⇄ to move an item, ✕ to remove it, an item’s text to edit it, and any photo to view it full-screen — in the viewer use the camera button to take a photo, the picture button to add one from your library, the ⇤ ⇥ buttons (or drag a thumbnail) to reorder, and the trash button to delete one.' +
             '<div class="gbx-footer-actions"><button class="gbx-addbox" id="gbx-downloadcsv" type="button">Download CSV</button></div></div>';
 
         grid = root.querySelector('#gbx-grid');
@@ -307,7 +307,9 @@
     const ICONS = {
         camera: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
         trash: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>',
-        image: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'
+        image: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+        moveback: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="6" x2="5" y2="18"/><line x1="19" y1="12" x2="9" y2="12"/><polyline points="13 8 9 12 13 16"/></svg>',
+        movefwd: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="6" x2="19" y2="18"/><line x1="5" y1="12" x2="15" y2="12"/><polyline points="11 8 15 12 11 16"/></svg>'
     };
 
     // A hidden file input + tile/button pair. `capture` launches the camera
@@ -777,6 +779,24 @@
             libInput.click();
         });
 
+        const moveBackBtn = document.createElement('button');
+        moveBackBtn.className = 'gbx-modal-close gbx-modal-addphoto';
+        moveBackBtn.type = 'button';
+        moveBackBtn.title = 'Move this photo earlier in the order';
+        moveBackBtn.setAttribute('aria-label', 'Move photo earlier');
+        moveBackBtn.innerHTML = ICONS.moveback;
+        moveBackBtn.disabled = lbBusy || !photo || index === 0;
+        moveBackBtn.addEventListener('click', () => movePhotoInBox(box, index, index - 1));
+
+        const moveFwdBtn = document.createElement('button');
+        moveFwdBtn.className = 'gbx-modal-close gbx-modal-addphoto';
+        moveFwdBtn.type = 'button';
+        moveFwdBtn.title = 'Move this photo later in the order';
+        moveFwdBtn.setAttribute('aria-label', 'Move photo later');
+        moveFwdBtn.innerHTML = ICONS.movefwd;
+        moveFwdBtn.disabled = lbBusy || !photo || index === photos.length - 1;
+        moveFwdBtn.addEventListener('click', () => movePhotoInBox(box, index, index + 1));
+
         const delBtn = document.createElement('button');
         delBtn.className = 'gbx-modal-close gbx-modal-delphoto';
         delBtn.type = 'button';
@@ -795,6 +815,10 @@
 
         actions.appendChild(addBtn);
         actions.appendChild(libBtn);
+        if (photos.length > 1) {
+            actions.appendChild(moveBackBtn);
+            actions.appendChild(moveFwdBtn);
+        }
         actions.appendChild(delBtn);
         actions.appendChild(closeBtn);
         actions.appendChild(camInput);
@@ -919,16 +943,60 @@
         if (photos.length > 1) {
             const bottom = document.createElement('div');
             bottom.className = 'gbx-modal-bottom';
+            // Thumbnails are drag-and-drop reorderable (desktop); on touch
+            // devices the ⇤ ⇥ buttons in the top bar do the same job.
+            let dragFrom = null;
+            const clearDropMarks = () => {
+                bottom.querySelectorAll('.gbx-drop-before, .gbx-drop-after')
+                    .forEach(el => el.classList.remove('gbx-drop-before', 'gbx-drop-after'));
+            };
             photos.forEach((p, i) => {
                 const t = document.createElement('button');
                 t.className = 'gbx-modal-dotthumb' + (i === index ? ' gbx-active' : '');
                 t.type = 'button';
-                t.setAttribute('aria-label', 'Photo ' + (i + 1));
+                t.setAttribute('aria-label', 'Photo ' + (i + 1) + ' (drag to reorder)');
+                t.title = 'Drag to reorder';
                 const ti = document.createElement('img');
                 ti.src = p.local || p.src;
                 ti.alt = '';
+                ti.draggable = false;
                 t.appendChild(ti);
                 t.addEventListener('click', () => showIndex(i));
+
+                t.draggable = !lbBusy;
+                t.addEventListener('dragstart', e => {
+                    dragFrom = i;
+                    t.classList.add('gbx-dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                    try { e.dataTransfer.setData('text/plain', String(i)); } catch (_) { /* IE quirk */ }
+                });
+                t.addEventListener('dragend', () => {
+                    dragFrom = null;
+                    t.classList.remove('gbx-dragging');
+                    clearDropMarks();
+                });
+                t.addEventListener('dragover', e => {
+                    if (dragFrom === null || dragFrom === i) return;
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    const r = t.getBoundingClientRect();
+                    const before = e.clientX < r.left + r.width / 2;
+                    t.classList.toggle('gbx-drop-before', before);
+                    t.classList.toggle('gbx-drop-after', !before);
+                });
+                t.addEventListener('dragleave', () => t.classList.remove('gbx-drop-before', 'gbx-drop-after'));
+                t.addEventListener('drop', e => {
+                    e.preventDefault();
+                    clearDropMarks();
+                    if (dragFrom === null || dragFrom === i) return;
+                    const r = t.getBoundingClientRect();
+                    const before = e.clientX < r.left + r.width / 2;
+                    let to = before ? i : i + 1;
+                    if (dragFrom < to) to--;
+                    const from = dragFrom;
+                    dragFrom = null;
+                    movePhotoInBox(box, from, to);
+                });
                 bottom.appendChild(t);
             });
             lbEl.appendChild(bottom);
@@ -942,6 +1010,8 @@
             const t = e.target;
             if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
             if (e.key === 'Escape') closeLightboxGbx();
+            else if (e.key === 'ArrowLeft' && e.shiftKey) { if (photo && index > 0) movePhotoInBox(box, index, index - 1); }
+            else if (e.key === 'ArrowRight' && e.shiftKey) { if (photo && index < photos.length - 1) movePhotoInBox(box, index, index + 1); }
             else if (e.key === 'ArrowLeft') prev();
             else if (e.key === 'ArrowRight') next();
         };
@@ -1042,6 +1112,34 @@
             if (lightbox) lightbox.index = Math.min(index, Math.max(0, photos.length - 1));
         } catch (err) {
             lbStatus = authErrorMessage(err) || ('Could not delete photo: ' + err.message);
+        }
+        lbBusy = false;
+        renderLightbox();
+        renderGrid();
+    }
+
+    // Move a photo to a new position in its box's list. The lightbox index
+    // follows the photo being viewed so the stage doesn't jump.
+    async function movePhotoInBox(box, from, to) {
+        if (lbBusy) return;
+        const photos = photosFor(box.id);
+        if (from === to || from < 0 || to < 0 || from >= photos.length || to >= photos.length) return;
+        if (!ensureToken()) return;
+        lbBusy = true;
+        lbStatus = 'Saving photo order…';
+        renderLightbox();
+        try {
+            const moved = photos.splice(from, 1)[0];
+            photos.splice(to, 0, moved);
+            if (lightbox) {
+                if (lightbox.index === from) lightbox.index = to;
+                else if (from < lightbox.index && to >= lightbox.index) lightbox.index--;
+                else if (from > lightbox.index && to <= lightbox.index) lightbox.index++;
+            }
+            await savePhotoMap('Reorder garage photos');
+            lbStatus = '';
+        } catch (err) {
+            lbStatus = authErrorMessage(err) || ('Could not save photo order: ' + err.message);
         }
         lbBusy = false;
         renderLightbox();

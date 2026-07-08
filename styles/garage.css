@@ -70,11 +70,12 @@
   .gbx-addbox:hover { background: var(--bg-subtle); }
   .gbx-addbox-icon {
     border: 1px solid var(--divider); background: var(--bg); color: var(--accent);
-    width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
-    font-size: 26px; line-height: 1; font-family: inherit;
-    display: flex; align-items: center; justify-content: center;
-    padding: 0 0 3px; transition: background .15s;
+    min-height: 44px; border-radius: 980px; cursor: pointer;
+    font-size: 15px; font-weight: 500; line-height: 1; font-family: inherit;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    padding: 0 18px 0 14px; transition: background .15s;
   }
+  .gbx-addbox-plus { font-size: 24px; font-weight: 400; padding-bottom: 3px; }
   .gbx-addbox-icon:hover { background: var(--bg-subtle); }
   .gbx-grid {
     max-width: 980px; margin: 14px auto 0; padding: 0 20px 24px;
@@ -349,6 +350,9 @@
   }
   .gbx-modal-dotthumb.gbx-active { opacity: 1; border-color: #2997ff; }
   .gbx-modal-dotthumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .gbx-modal-dotthumb.gbx-dragging { opacity: 0.3; }
+  .gbx-modal-dotthumb.gbx-drop-before { box-shadow: -5px 0 0 #2997ff; }
+  .gbx-modal-dotthumb.gbx-drop-after { box-shadow: 5px 0 0 #2997ff; }
 
   /* ---------- AI analysis panel (inside the lightbox) ---------- */
   .gbx-modal-panel {
