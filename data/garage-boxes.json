@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-07T23:48:22.861Z",
+  "updated": "2026-07-08T00:13:50.098Z",
   "boxes": [
     {
       "id": "box7",
@@ -109,6 +109,13 @@
         "12v battery charger",
         "Trickel charger"
       ]
+    },
+    {
+      "id": "box_1783469628594",
+      "number": 9,
+      "label": "New box",
+      "note": "",
+      "items": []
     }
   ]
 }
