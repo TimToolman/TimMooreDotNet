@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-08T00:14:17.424Z",
+  "updated": "2026-07-08T00:15:42.009Z",
   "photos": {
     "box6": [
       {
@@ -108,6 +108,16 @@
     "box_1783469628594": [
       {
         "src": "images/garage/box_1783469628594-1783469655966.jpg",
+        "caption": "Box of assorted small electronics and accessories"
+      },
+      {
+        "src": "images/garage/box_1783469628594-1783469673354.jpg",
+        "caption": ""
+      }
+    ],
+    "box_1783469703141": [
+      {
+        "src": "images/garage/box_1783469703141-1783469740273.jpg",
         "caption": ""
       }
     ]
