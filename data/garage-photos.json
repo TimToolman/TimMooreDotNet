@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-08T00:04:07.219Z",
+  "updated": "2026-07-08T00:14:17.424Z",
   "photos": {
     "box6": [
       {
@@ -61,15 +61,15 @@
     ],
     "box_1783462379723": [
       {
+        "src": "images/garage/box_1783462379723-1783462803241.jpg",
+        "caption": ""
+      },
+      {
         "src": "images/garage/box_1783462379723-1783462569410.jpg",
         "caption": ""
       },
       {
         "src": "images/garage/box_1783462379723-1783462620934.jpg",
-        "caption": ""
-      },
-      {
-        "src": "images/garage/box_1783462379723-1783462803241.jpg",
         "caption": ""
       },
       {
@@ -102,6 +102,12 @@
       },
       {
         "src": "images/garage/box_1783462300213-1783469045545.jpg",
+        "caption": ""
+      }
+    ],
+    "box_1783469628594": [
+      {
+        "src": "images/garage/box_1783469628594-1783469655966.jpg",
         "caption": ""
       }
     ]
