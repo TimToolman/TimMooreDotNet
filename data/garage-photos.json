@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-08T00:02:54.186Z",
+  "updated": "2026-07-08T00:04:07.219Z",
   "photos": {
     "box6": [
       {
@@ -79,15 +79,29 @@
     ],
     "box7": [
       {
-        "src": "images/garage/box7-1783462764555.jpg",
-        "caption": ""
-      },
-      {
         "src": "images/garage/box7-1783468044113.jpg",
         "caption": "Storage bin with coiled extension cords"
       },
       {
+        "src": "images/garage/box7-1783462764555.jpg",
+        "caption": ""
+      },
+      {
         "src": "images/garage/box7-1783462773376.jpg",
+        "caption": ""
+      }
+    ],
+    "box_1783462300213": [
+      {
+        "src": "images/garage/box_1783462300213-1783468999094.jpg",
+        "caption": ""
+      },
+      {
+        "src": "images/garage/box_1783462300213-1783469024433.jpg",
+        "caption": ""
+      },
+      {
+        "src": "images/garage/box_1783462300213-1783469045545.jpg",
         "caption": ""
       }
     ]
