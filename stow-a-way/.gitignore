@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native builds
+/ios
+/android
+*.orig.*
+
+# EAS / secrets — never commit store credentials
+play-service-account.json
+*.keystore
+*.p8
+*.p12
+*.mobileprovision
+credentials.json
+
+# Metro
+.metro-health-check*
+
+# Misc
+*.log
+.DS_Store
+.env*.local
