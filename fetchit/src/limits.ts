@@ -10,4 +10,4 @@ export function canAddBox(currentCount: number, isPro: boolean): boolean {
 }
 
 /** Product identifier configured in App Store Connect / Play Console. */
-export const PRO_PRODUCT_ID = 'net.timmoore.fetchit.pro_unlimited';
+export { PRO_PRODUCT_ID } from './brand';

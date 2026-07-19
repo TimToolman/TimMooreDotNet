@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate FetchIt app icons and splash from scratch (no external assets).
+"""Generate FetchBIN app icons and splash from scratch (no external assets).
 
 Produces:
   assets/icon.png            1024x1024  iOS / general app icon (full bleed)

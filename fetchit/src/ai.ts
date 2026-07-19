@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import * as FileSystem from 'expo-file-system';
 
+import { STORAGE_PREFIX } from './brand';
 import { getApiKey } from './settings';
 
 export interface PhotoAnalysis {
@@ -33,7 +34,7 @@ export class BudgetExceededError extends Error {
   }
 }
 
-const DEVICE_ID_KEY = 'fetchit:deviceId:v1';
+const DEVICE_ID_KEY = `${STORAGE_PREFIX}:deviceId:v1`;
 
 /** Stable per-install id so the proxy can rate-limit fairly (not a secret). */
 async function getDeviceId(): Promise<string> {
@@ -81,7 +82,7 @@ function parseAnthropic(data: {
 /**
  * Ask Claude what's in a box photo.
  *
- * Default path: POST the image to the FetchIt proxy (a Cloudflare Worker that
+ * Default path: POST the image to the app's proxy (a Cloudflare Worker that
  * holds the Anthropic key and enforces the monthly spend cap) — no key needed
  * on-device. Power-user fallback: if the user pasted their own Anthropic key in
  * Settings, call Anthropic directly on their dime instead.

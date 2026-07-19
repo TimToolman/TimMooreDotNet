@@ -1,6 +1,7 @@
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 
+import { STORAGE_PREFIX } from './brand';
 import { Box } from './types';
 
 function csvField(v: string | number): string {
@@ -40,9 +41,9 @@ async function shareText(content: string, filename: string, mime: string): Promi
 }
 
 export async function exportCsv(boxes: Box[]): Promise<void> {
-  await shareText(boxesToCsv(boxes), 'fetchit-inventory.csv', 'text/csv');
+  await shareText(boxesToCsv(boxes), `${STORAGE_PREFIX}-inventory.csv`, 'text/csv');
 }
 
 export async function exportJson(boxes: Box[]): Promise<void> {
-  await shareText(boxesToJson(boxes), 'fetchit-backup.json', 'application/json');
+  await shareText(boxesToJson(boxes), `${STORAGE_PREFIX}-backup.json`, 'application/json');
 }

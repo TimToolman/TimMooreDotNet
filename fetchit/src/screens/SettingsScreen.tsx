@@ -12,6 +12,7 @@ import {
   View,
 } from 'react-native';
 
+import { APP_NAME, PRO_PRODUCT_NAME } from '../brand';
 import { exportCsv, exportJson } from '../csv';
 import { usePurchases } from '../purchases';
 import { clearApiKey, getApiKey, setApiKey } from '../settings';
@@ -84,10 +85,10 @@ export default function SettingsScreen({ navigation }: Props) {
       <Text style={s.groupTitle}>PLAN</Text>
       <View style={s.card}>
         <Text style={s.status}>
-          {isPro ? '✓ FetchIt Unlimited — unlimited boxes' : 'Free plan — 1 box'}
+          {isPro ? `✓ ${PRO_PRODUCT_NAME} — unlimited boxes` : 'Free plan — 1 box'}
         </Text>
         {isPro ? (
-          <Text style={s.body}>Thanks for supporting FetchIt.</Text>
+          <Text style={s.body}>Thanks for supporting {APP_NAME}.</Text>
         ) : (
           <>
             <Text style={s.body}>
@@ -114,15 +115,13 @@ export default function SettingsScreen({ navigation }: Props) {
       <Text style={s.groupTitle}>AI PHOTO ANALYSIS</Text>
       <View style={s.card}>
         <Text style={s.body}>
-          Photo analysis works out of the box through FetchIt's shared AI service (subject to a
+          Photo analysis works out of the box through {APP_NAME}'s shared AI service (subject to a
           monthly limit). Optionally add your own Anthropic API key to use your own account with no
           shared limit — it's stored only on this device's secure keychain and sent only to
           Anthropic.
         </Text>
         <Text style={s.status}>
-          {hasKey
-            ? '✓ Using your own Anthropic key.'
-            : "Using FetchIt's shared AI service."}
+          {hasKey ? '✓ Using your own Anthropic key.' : `Using ${APP_NAME}'s shared AI service.`}
         </Text>
         <TextInput
           style={s.input}
@@ -180,7 +179,7 @@ export default function SettingsScreen({ navigation }: Props) {
       {/* About */}
       <Text style={s.groupTitle}>ABOUT</Text>
       <View style={s.card}>
-        <Text style={s.aboutName}>FetchIt</Text>
+        <Text style={s.aboutName}>{APP_NAME}</Text>
         <Text style={s.body}>
           A private, local-first way to catalog what's in your boxes and bins — search every item,
           snap a photo, and let AI list the contents. Your inventory lives on your device.

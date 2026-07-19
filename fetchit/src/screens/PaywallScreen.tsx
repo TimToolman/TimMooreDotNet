@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { PRO_PRODUCT_NAME } from '../brand';
 import { FREE_BOX_LIMIT } from '../limits';
 import { usePurchases } from '../purchases';
 import { Theme, useTheme } from '../theme';
@@ -57,7 +58,7 @@ export default function PaywallScreen({ navigation }: Props) {
     <View style={s.screen}>
       <ScrollView contentContainerStyle={{ padding: 24, paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }}>
         <View style={s.badge}>
-          <Text style={s.badgeText}>FetchIt Unlimited</Text>
+          <Text style={s.badgeText}>{PRO_PRODUCT_NAME}</Text>
         </View>
         <Text style={s.headline}>Room for everything you own</Text>
         <Text style={s.sub}>

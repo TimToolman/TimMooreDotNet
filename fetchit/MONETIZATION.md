@@ -1,9 +1,9 @@
-# FetchIt — Free tier + paid unlock
+# FetchBIN — Free tier + paid unlock
 
-FetchIt uses a **freemium** model:
+FetchBIN uses a **freemium** model:
 
 - **Free:** 1 box (with unlimited items, photos, and AI sync on that box).
-- **Paid — "FetchIt Unlimited":** a **one-time, non-consumable** in-app purchase
+- **Paid — "FetchBIN Unlimited":** a **one-time, non-consumable** in-app purchase
   that lifts the box limit to unlimited.
 
 A one-time unlock (rather than a subscription) fits an offline, local-first
@@ -61,7 +61,7 @@ eas build --profile development --platform ios      # or android
 ### 2. Configure products
 
 - **App Store Connect** → your app → In-App Purchases → create a
-  **Non-Consumable** with product id `net.timmoore.fetchit.pro_unlimited`
+  **Non-Consumable** with product id `net.timmoore.fetchbin.pro_unlimited`
   (see `PRO_PRODUCT_ID` in `src/limits.ts`).
 - **Play Console** → Monetize → In-app products → create the same product id.
 - **RevenueCat dashboard** → add both, attach them to an **Offering**, and map

@@ -1,4 +1,4 @@
-# Testing FetchIt
+# Testing FetchBIN
 
 Two ways to run the app: **Expo Go** (fastest, for iterating) or a **standalone
 build** (a real install, closest to the store version).

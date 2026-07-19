@@ -1,11 +1,11 @@
-# FetchIt
+# FetchBIN
 
 A private, local-first mobile app for cataloging what's in your boxes and bins.
 Search every item, snap a photo of a box's contents, and let AI list what's
 inside. Built with **Expo / React Native** so a single codebase ships to both
 the **Apple App Store** and **Google Play**.
 
-FetchIt is the standalone version of the "Garage Boxes" tab from
+FetchBIN is the standalone version of the "Garage Boxes" tab from
 [timmoore.net](https://timmoore.net) — reworked to store everything on-device
 instead of syncing through GitHub.
 
@@ -26,7 +26,7 @@ instead of syncing through GitHub.
   app's document directory. No account, no server.
 - **Export** — share your inventory as CSV or a full JSON backup.
 - **Light & dark** — follows the system appearance.
-- **Freemium** — free for 1 box; a one-time "FetchIt Unlimited" purchase lifts
+- **Freemium** — free for 1 box; a one-time "FetchBIN Unlimited" purchase lifts
   the limit. See [`MONETIZATION.md`](./MONETIZATION.md) (ships with a testable
   stub; wire up RevenueCat before release).
 
@@ -35,7 +35,8 @@ instead of syncing through GitHub.
 ```
 fetchit/
 ├── App.tsx                 Navigation shell (native stack)
-├── app.json                Expo config: name, bundle IDs, icons, permissions
+├── brand.config.js         Single source of truth for the app name — see BRANDING.md
+├── app.config.js           Expo config (reads brand.config.js): bundle IDs, icons, permissions
 ├── eas.json                EAS Build & Submit profiles for both stores
 ├── index.ts                Entry point
 ├── assets/                 Generated icons & splash (see scripts/make_icons.py)
@@ -72,7 +73,7 @@ npm start          # scan the QR code with Expo Go
 
 ## Build for the stores (EAS)
 
-FetchIt uses [EAS Build](https://docs.expo.dev/build/introduction/) to
+FetchBIN uses [EAS Build](https://docs.expo.dev/build/introduction/) to
 produce store binaries in the cloud — no local Xcode/Android Studio required.
 
 ```bash
@@ -90,9 +91,11 @@ eas build --platform all --profile production
 Before the first production build:
 
 1. **Bump identifiers if needed.** The app ships with
-   `net.timmoore.fetchit` for both `ios.bundleIdentifier` and
-   `android.package` in `app.json`. Change these to your own reverse-domain
-   identifier if you're publishing under a different account.
+   `net.timmoore.fetchbin` for both `ios.bundleIdentifier` and
+   `android.package`. These (and the app name) live in
+   [`brand.config.js`](./brand.config.js) — change them there, not in
+   `app.config.js`. See [`BRANDING.md`](./BRANDING.md) for what's safe to rename
+   vs. frozen after release.
 2. **Apple**: enrol in the [Apple Developer Program](https://developer.apple.com/programs/)
    ($99/yr), create the app in App Store Connect, and note your Apple Team ID
    and the App Store Connect app ID.

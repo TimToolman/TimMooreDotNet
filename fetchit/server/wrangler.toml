@@ -1,4 +1,5 @@
-name = "fetchit-ai-proxy"
+# Worker service name — determines the deployed URL. Frozen after first deploy.
+name = "fetchbin-ai-proxy"
 main = "src/index.ts"
 compatibility_date = "2026-01-01"
 

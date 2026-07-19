@@ -1,6 +1,8 @@
 import * as SecureStore from 'expo-secure-store';
 
-const API_KEY_SLOT = 'fetchit_anthropic_key';
+import { SECURE_STORE_SLOT } from './brand';
+
+const API_KEY_SLOT = SECURE_STORE_SLOT;
 
 /**
  * The Anthropic API key (optional — only needed for AI photo analysis) is kept

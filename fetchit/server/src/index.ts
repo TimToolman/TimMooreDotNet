@@ -1,5 +1,5 @@
 /**
- * FetchIt AI proxy — Cloudflare Worker.
+ * FetchBIN AI proxy — Cloudflare Worker.
  *
  * Holds the Anthropic API key server-side so the app never ships it, and
  * enforces a HARD MONTHLY SPEND CAP: once the running cost for the current
@@ -177,8 +177,8 @@ export default {
     // 6. Return the Anthropic response verbatim (the app parses content the same
     //    way it would a direct call), plus budget headers for observability.
     return json(data, 200, {
-      'x-fetchit-month-spend': newSpent.toFixed(4),
-      'x-fetchit-month-budget': budget.toFixed(2),
+      'x-fetchbin-month-spend': newSpent.toFixed(4),
+      'x-fetchbin-month-budget': budget.toFixed(2),
     });
   },
 };

@@ -10,11 +10,12 @@ import React, {
   useState,
 } from 'react';
 
+import { STORAGE_PREFIX } from './brand';
 import { SEED_BOXES } from './seed';
 import { Box, InventorySnapshot, Photo } from './types';
 
-const STORAGE_KEY = 'fetchit:inventory:v1';
-const SEEDED_KEY = 'fetchit:seeded:v1';
+const STORAGE_KEY = `${STORAGE_PREFIX}:inventory:v1`;
+const SEEDED_KEY = `${STORAGE_PREFIX}:seeded:v1`;
 const PHOTO_DIR = FileSystem.documentDirectory + 'photos/';
 
 let idCounter = 0;

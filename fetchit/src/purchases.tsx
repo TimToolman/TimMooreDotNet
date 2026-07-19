@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import { STORAGE_PREFIX } from './brand';
+
 /**
  * Entitlement layer for the "Unlimited boxes" upgrade.
  *
@@ -12,7 +14,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
  * cross-device restore behind one `isPro` entitlement. See MONETIZATION.md.
  */
 
-const PRO_KEY = 'fetchit:pro:v1';
+const PRO_KEY = `${STORAGE_PREFIX}:pro:v1`;
 
 interface PurchasesValue {
   isPro: boolean;

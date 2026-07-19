@@ -1,6 +1,6 @@
-# FetchIt AI proxy (Cloudflare Worker)
+# FetchBIN AI proxy (Cloudflare Worker)
 
-A tiny Cloudflare Worker that sits between the FetchIt app and Anthropic. It:
+A tiny Cloudflare Worker that sits between the FetchBIN app and Anthropic. It:
 
 - **Holds your Anthropic API key server-side** — it never ships in the app.
 - **Enforces a hard monthly spend cap** (`MONTHLY_BUDGET_USD`, default **$100**).
@@ -40,8 +40,8 @@ npm run deploy
 ```
 
 `wrangler deploy` prints your Worker URL, e.g.
-`https://fetchit-ai-proxy.<subdomain>.workers.dev`. Put that URL in the app:
-set `expo.extra.aiProxyUrl` in `fetchit/app.json` (and `EXPO_PUBLIC_AI_PROXY_URL`
+`https://fetchbin-ai-proxy.<subdomain>.workers.dev`. Put that URL in the app:
+set `expo.extra.aiProxyUrl` in `fetchit/app.config.js` (and `EXPO_PUBLIC_AI_PROXY_URL`
 locally if you prefer), then rebuild.
 
 ## The $100 cap

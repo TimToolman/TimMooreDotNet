@@ -5,6 +5,7 @@ import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { APP_NAME } from './src/brand';
 import { PurchasesProvider } from './src/purchases';
 import { StoreProvider } from './src/store';
 import { useTheme } from './src/theme';
@@ -44,7 +45,7 @@ function Navigation() {
         <Stack.Screen
           name="Boxes"
           component={BoxesScreen}
-          options={{ title: 'FetchIt' }}
+          options={{ title: APP_NAME }}
         />
         <Stack.Screen name="BoxDetail" component={BoxDetailScreen} options={{ title: 'Box' }} />
         <Stack.Screen
