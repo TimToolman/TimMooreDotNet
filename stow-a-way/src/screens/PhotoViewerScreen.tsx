@@ -17,34 +17,50 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { analyzePhoto, AuthError, MissingKeyError } from '../ai';
+import { getApiKey } from '../settings';
 import { persistPhotoFile, useBox, useStore } from '../store';
 import { RootStackParamList } from '../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PhotoViewer'>;
 
+interface AddReco {
+  text: string;
+  checked: boolean;
+}
+interface RemoveReco {
+  text: string;
+  index: number;
+  checked: boolean;
+}
+
 type Analysis =
   | { phase: 'idle' }
   | { phase: 'running' }
-  | { phase: 'review'; caption: string; items: string }
+  | {
+      phase: 'reconcile';
+      caption: string;
+      add: AddReco[];
+      remove: RemoveReco[];
+      detectedCount: number;
+    }
   | { phase: 'error'; message: string };
+
+/** Loose match so "Yellow extension cord" and "yellow extension cord (heavy)"
+ * aren't treated as different items when diffing a photo against the list. */
+const norm = (s: string) => s.toLowerCase().replace(/[()]/g, ' ').replace(/\s+/g, ' ').trim();
 
 export default function PhotoViewerScreen({ route, navigation }: Props) {
   const { boxId } = route.params;
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const box = useBox(boxId);
-  const {
-    addItems,
-    addPhoto,
-    removePhoto,
-    reorderPhoto,
-    updatePhotoCaption,
-  } = useStore();
+  const { addPhoto, removePhoto, reorderPhoto, updatePhotoCaption, setItems } = useStore();
 
   const [index, setIndex] = useState(route.params.index);
   const [analysis, setAnalysis] = useState<Analysis>({ phase: 'idle' });
   const [captionDraft, setCaptionDraft] = useState<string | null>(null);
   const listRef = useRef<FlatList>(null);
+  const autoAnalyzedFor = useRef<string | null>(null);
 
   const photos = box?.photos ?? [];
   const clampedIndex = Math.max(0, Math.min(index, photos.length - 1));
@@ -59,38 +75,41 @@ export default function PhotoViewerScreen({ route, navigation }: Props) {
     if (index !== clampedIndex) setIndex(clampedIndex);
   }, [clampedIndex, index]);
 
-  const onScrollEnd = useCallback(
-    (e: { nativeEvent: { contentOffset: { x: number } } }) => {
-      const i = Math.round(e.nativeEvent.contentOffset.x / width);
-      if (i !== index) {
-        setIndex(i);
-        setAnalysis({ phase: 'idle' });
-      }
-    },
-    [width, index],
-  );
-
-  const goToKeySetup = () => {
+  const goToKeySetup = useCallback(() => {
     Alert.alert(
       'AI analysis needs a key',
-      'Add an Anthropic API key in Settings to auto-identify items in your photos. The key is stored only on this device.',
+      'Add an Anthropic API key in Settings to compare a photo against your item list. The key is stored only on this device.',
       [
         { text: 'Not now', style: 'cancel' },
         { text: 'Open Settings', onPress: () => navigation.navigate('Settings') },
       ],
     );
-  };
+  }, [navigation]);
 
-  const runAnalysis = async () => {
-    if (!box || !current) return;
+  // Analyze the current photo, then diff what the AI sees against the box's
+  // current items: additions = seen-but-not-listed, removals = listed-but-not-seen.
+  const runAnalysis = useCallback(async () => {
+    const activeBox = box;
+    const photo = activeBox?.photos[clampedIndex];
+    if (!activeBox || !photo) return;
     setAnalysis({ phase: 'running' });
     try {
-      const result = await analyzePhoto(current.uri, box.number, box.label);
-      setAnalysis({
-        phase: 'review',
-        caption: result.caption,
-        items: result.items.join('\n'),
-      });
+      const result = await analyzePhoto(photo.uri, activeBox.number, activeBox.label);
+      const detected = result.items.map((s) => s.trim()).filter(Boolean);
+      const detectedNorm = new Set(detected.map(norm));
+      const existingNorm = activeBox.items.map(norm);
+
+      const add: AddReco[] = detected
+        .filter((it) => !existingNorm.includes(norm(it)))
+        .map((text) => ({ text, checked: true }));
+      const remove: RemoveReco[] = activeBox.items
+        .map((text, i) => ({ text, index: i }))
+        .filter((r) => !detectedNorm.has(norm(r.text)))
+        // Removals are opt-in — a single photo rarely shows everything, so
+        // default them off and let the user confirm what's actually gone.
+        .map((r) => ({ ...r, checked: false }));
+
+      setAnalysis({ phase: 'reconcile', caption: result.caption, add, remove, detectedCount: detected.length });
     } catch (err) {
       if (err instanceof MissingKeyError) {
         setAnalysis({ phase: 'idle' });
@@ -102,23 +121,63 @@ export default function PhotoViewerScreen({ route, navigation }: Props) {
         setAnalysis({ phase: 'error', message: (err as Error).message });
       }
     }
-  };
+  }, [box, clampedIndex, goToKeySetup]);
 
-  const saveAnalysis = () => {
-    if (analysis.phase !== 'review' || !box || !current) return;
-    const items = analysis.items
-      .split('\n')
-      .map((s) => s.trim())
-      .filter(Boolean);
-    if (items.length) addItems(box.id, items);
+  // Auto-run once for a freshly added photo (only when a key is already set, so
+  // we never nag someone who hasn't opted into AI).
+  useEffect(() => {
+    if (!route.params.autoAnalyze || !current) return;
+    if (autoAnalyzedFor.current === current.id) return;
+    autoAnalyzedFor.current = current.id;
+    getApiKey().then((k) => {
+      if (k) runAnalysis();
+    });
+  }, [route.params.autoAnalyze, current, runAnalysis]);
+
+  const onScrollEnd = useCallback(
+    (e: { nativeEvent: { contentOffset: { x: number } } }) => {
+      const i = Math.round(e.nativeEvent.contentOffset.x / width);
+      if (i !== index) {
+        setIndex(i);
+        setAnalysis({ phase: 'idle' });
+      }
+    },
+    [width, index],
+  );
+
+  const toggleAdd = (i: number) =>
+    setAnalysis((a) =>
+      a.phase === 'reconcile'
+        ? { ...a, add: a.add.map((r, j) => (j === i ? { ...r, checked: !r.checked } : r)) }
+        : a,
+    );
+  const toggleRemove = (i: number) =>
+    setAnalysis((a) =>
+      a.phase === 'reconcile'
+        ? { ...a, remove: a.remove.map((r, j) => (j === i ? { ...r, checked: !r.checked } : r)) }
+        : a,
+    );
+
+  const applyReconcile = () => {
+    if (analysis.phase !== 'reconcile' || !box || !current) return;
+    const removeIdx = new Set(analysis.remove.filter((r) => r.checked).map((r) => r.index));
+    const kept = box.items.filter((_, i) => !removeIdx.has(i));
+    const added = analysis.add.filter((a) => a.checked).map((a) => a.text);
+    const nAdd = added.length;
+    const nRemove = removeIdx.size;
+    if (nAdd || nRemove) setItems(box.id, [...kept, ...added]);
+
     const caption = analysis.caption.trim();
-    if (caption) updatePhotoCaption(box.id, current.id, caption);
+    if (caption && caption !== current.caption) updatePhotoCaption(box.id, current.id, caption);
+
     setAnalysis({ phase: 'idle' });
+    const parts: string[] = [];
+    if (nAdd) parts.push(`${nAdd} added`);
+    if (nRemove) parts.push(`${nRemove} removed`);
     Alert.alert(
-      'Saved',
-      items.length
-        ? `${items.length} item${items.length === 1 ? '' : 's'} added to Box ${box.number}.`
-        : 'Caption saved.',
+      'List updated',
+      (parts.length ? `${parts.join(' · ')} in Box ${box.number}. ` : 'No item changes. ') +
+        'The photo is kept — delete older photos yourself if they no longer apply.',
     );
   };
 
@@ -139,8 +198,14 @@ export default function PhotoViewerScreen({ route, navigation }: Props) {
     addPhoto(box.id, uri);
     const newIndex = photos.length;
     setIndex(newIndex);
-    setTimeout(() => listRef.current?.scrollToOffset({ offset: newIndex * width, animated: false }), 50);
     setAnalysis({ phase: 'idle' });
+    setTimeout(() => listRef.current?.scrollToOffset({ offset: newIndex * width, animated: false }), 50);
+    // Newly added photo → re-analyze and reconcile against the current list.
+    const key = await getApiKey();
+    if (key) {
+      autoAnalyzedFor.current = null; // let the effect fire for the new photo
+      setTimeout(runAnalysis, 250);
+    }
   };
 
   const confirmDelete = () => {
@@ -198,7 +263,7 @@ export default function PhotoViewerScreen({ route, navigation }: Props) {
         getItemLayout={(_, i) => ({ length: width, offset: width * i, index: i })}
         onMomentumScrollEnd={onScrollEnd}
         renderItem={({ item }) => (
-          <View style={{ width, height: height * 0.62, alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ width, height: height * 0.52, alignItems: 'center', justifyContent: 'center' }}>
             <Image source={{ uri: item.uri }} style={s.photo} contentFit="contain" transition={150} />
           </View>
         )}
@@ -220,18 +285,14 @@ export default function PhotoViewerScreen({ route, navigation }: Props) {
           disabled={clampedIndex >= photos.length - 1}
           onPress={() => reorderPhoto(box.id, clampedIndex, clampedIndex + 1)}
         />
-        <ActionBtn
-          label="Caption"
-          glyph="✎"
-          onPress={() => setCaptionDraft(current?.caption ?? '')}
-        />
+        <ActionBtn label="Caption" glyph="✎" onPress={() => setCaptionDraft(current?.caption ?? '')} />
         <ActionBtn label="Delete" glyph="🗑" tint="#ff6961" onPress={confirmDelete} />
       </View>
 
-      {/* AI analyze button */}
-      {analysis.phase === 'idle' ? (
+      {/* AI analyze/reconcile button */}
+      {analysis.phase === 'idle' && captionDraft === null ? (
         <Pressable style={s.analyzeBtn} onPress={runAnalysis}>
-          <Text style={s.analyzeText}>✨ Analyze this photo with AI</Text>
+          <Text style={s.analyzeText}>✨ Analyze photo &amp; sync item list</Text>
         </Pressable>
       ) : null}
 
@@ -258,16 +319,17 @@ export default function PhotoViewerScreen({ route, navigation }: Props) {
         </View>
       ) : null}
 
-      {/* AI analysis panel */}
+      {/* Running */}
       {analysis.phase === 'running' ? (
         <View style={[s.panel, { paddingBottom: insets.bottom + 14 }]}>
           <View style={s.runningRow}>
             <ActivityIndicator color="#fff" />
-            <Text style={s.panelNote}>Asking AI what's in this photo…</Text>
+            <Text style={s.panelNote}>Comparing this photo with your item list…</Text>
           </View>
         </View>
       ) : null}
 
+      {/* Error */}
       {analysis.phase === 'error' ? (
         <View style={[s.panel, { paddingBottom: insets.bottom + 14 }]}>
           <Text style={s.panelTitle}>Analysis failed</Text>
@@ -283,39 +345,79 @@ export default function PhotoViewerScreen({ route, navigation }: Props) {
         </View>
       ) : null}
 
-      {analysis.phase === 'review' ? (
+      {/* Reconcile */}
+      {analysis.phase === 'reconcile' ? (
         <ScrollView
-          style={[s.panel, { maxHeight: height * 0.5 }]}
+          style={[s.panel, { maxHeight: height * 0.56 }]}
           contentContainerStyle={{ paddingBottom: insets.bottom + 14 }}
         >
-          <Text style={s.panelTitle}>AI photo analysis — is this accurate?</Text>
+          <Text style={s.panelTitle}>Sync Box {box.number} with this photo</Text>
           <Text style={s.panelNote}>
-            Edit below, then save. Each line becomes an item in Box {box.number}.
+            AI saw {analysis.detectedCount} item{analysis.detectedCount === 1 ? '' : 's'}. Pick what
+            to change, then Save. Photos are never deleted automatically.
           </Text>
+
+          {analysis.add.length > 0 ? (
+            <>
+              <Text style={s.groupHead}>ADD — seen in photo, not on the list</Text>
+              {analysis.add.map((r, i) => (
+                <CheckRow key={`a${i}`} label={r.text} checked={r.checked} accent="#30d158" onToggle={() => toggleAdd(i)} />
+              ))}
+            </>
+          ) : null}
+
+          {analysis.remove.length > 0 ? (
+            <>
+              <Text style={s.groupHead}>REMOVE — on the list, not seen in this photo</Text>
+              {analysis.remove.map((r, i) => (
+                <CheckRow key={`r${i}`} label={r.text} checked={r.checked} accent="#ff6961" onToggle={() => toggleRemove(i)} />
+              ))}
+            </>
+          ) : null}
+
+          {analysis.add.length === 0 && analysis.remove.length === 0 ? (
+            <Text style={s.matchNote}>✓ Everything on the list matches this photo.</Text>
+          ) : null}
+
           <Text style={s.inputLabel}>Photo caption</Text>
           <TextInput
             style={s.input}
             value={analysis.caption}
             onChangeText={(v) => setAnalysis({ ...analysis, caption: v })}
           />
-          <Text style={s.inputLabel}>Detected items (one per line)</Text>
-          <TextInput
-            style={[s.input, s.textarea]}
-            value={analysis.items}
-            onChangeText={(v) => setAnalysis({ ...analysis, items: v })}
-            multiline
-          />
+
           <View style={s.panelBtns}>
-            <Pressable style={s.panelSave} onPress={saveAnalysis}>
-              <Text style={s.panelSaveText}>Save to box</Text>
+            <Pressable style={s.panelSave} onPress={applyReconcile}>
+              <Text style={s.panelSaveText}>Save changes</Text>
             </Pressable>
             <Pressable style={s.panelCancel} onPress={() => setAnalysis({ phase: 'idle' })}>
-              <Text style={s.panelCancelText}>Discard</Text>
+              <Text style={s.panelCancelText}>Cancel</Text>
             </Pressable>
           </View>
         </ScrollView>
       ) : null}
     </View>
+  );
+}
+
+function CheckRow({
+  label,
+  checked,
+  accent,
+  onToggle,
+}: {
+  label: string;
+  checked: boolean;
+  accent: string;
+  onToggle: () => void;
+}) {
+  return (
+    <Pressable style={styles.checkRow} onPress={onToggle}>
+      <View style={[styles.checkbox, checked && { backgroundColor: accent, borderColor: accent }]}>
+        {checked ? <Text style={styles.checkMark}>✓</Text> : null}
+      </View>
+      <Text style={styles.checkLabel}>{label}</Text>
+    </Pressable>
   );
 }
 
@@ -397,7 +499,28 @@ const styles = StyleSheet.create({
   panelTitle: { color: '#f5f5f7', fontSize: 15, fontWeight: '600', marginBottom: 4 },
   panelNote: { color: '#a1a1a6', fontSize: 13, marginBottom: 8 },
   runningRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  inputLabel: { color: '#a1a1a6', fontSize: 12, marginTop: 12, marginBottom: 4 },
+  groupHead: {
+    color: '#8e8e93',
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    marginTop: 14,
+    marginBottom: 6,
+  },
+  matchNote: { color: '#30d158', fontSize: 14, marginTop: 12 },
+  checkRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8 },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#5a5a5e',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkMark: { color: '#fff', fontSize: 15, fontWeight: '700', lineHeight: 18 },
+  checkLabel: { flex: 1, color: '#f5f5f7', fontSize: 15 },
+  inputLabel: { color: '#a1a1a6', fontSize: 12, marginTop: 16, marginBottom: 4 },
   input: {
     backgroundColor: '#2c2c2e',
     borderRadius: 10,
@@ -408,8 +531,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
   },
-  textarea: { minHeight: 110, textAlignVertical: 'top' },
-  panelBtns: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 14 },
+  panelBtns: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 16 },
   panelSave: {
     backgroundColor: '#0a84ff',
     borderRadius: 980,

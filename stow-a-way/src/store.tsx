@@ -60,6 +60,7 @@ interface StoreValue {
   deleteBox: (id: string) => void;
   addItem: (boxId: string, text: string) => void;
   addItems: (boxId: string, texts: string[]) => void;
+  setItems: (boxId: string, items: string[]) => void;
   updateItem: (boxId: string, index: number, text: string) => void;
   removeItem: (boxId: string, index: number) => void;
   moveItem: (fromBoxId: string, index: number, toBoxId: string) => void;
@@ -168,6 +169,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       mutate((prev) =>
         prev.map((b) => (b.id === boxId ? { ...b, items: [...b.items, ...clean] } : b)),
       );
+    },
+    [mutate],
+  );
+
+  // Replace a box's whole item list atomically — used by photo reconciliation,
+  // which computes the post-add/remove list in one shot.
+  const setItems = useCallback(
+    (boxId: string, items: string[]) => {
+      const clean = items.map((s) => s.trim()).filter(Boolean);
+      mutate((prev) => prev.map((b) => (b.id === boxId ? { ...b, items: clean } : b)));
     },
     [mutate],
   );
@@ -292,6 +303,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       deleteBox,
       addItem,
       addItems,
+      setItems,
       updateItem,
       removeItem,
       moveItem,
@@ -311,6 +323,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       deleteBox,
       addItem,
       addItems,
+      setItems,
       updateItem,
       removeItem,
       moveItem,

@@ -90,8 +90,13 @@ export default function BoxDetailScreen({ route, navigation }: Props) {
     try {
       const uri = await persistPhotoFile(result.assets[0].uri);
       addPhoto(box.id, uri);
-      // Jump straight to the viewer on the freshly added photo (offers AI analysis).
-      navigation.navigate('PhotoViewer', { boxId: box.id, index: box.photos.length });
+      // Jump to the viewer on the freshly added photo; autoAnalyze re-reads it
+      // and reconciles the detected contents against this box's item list.
+      navigation.navigate('PhotoViewer', {
+        boxId: box.id,
+        index: box.photos.length,
+        autoAnalyze: true,
+      });
     } catch {
       Alert.alert('Could not add photo', 'Something went wrong saving the image.');
     }

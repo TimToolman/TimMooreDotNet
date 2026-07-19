@@ -22,6 +22,6 @@ export interface InventorySnapshot {
 export type RootStackParamList = {
   Boxes: undefined;
   BoxDetail: { boxId: string };
-  PhotoViewer: { boxId: string; index: number };
+  PhotoViewer: { boxId: string; index: number; autoAnalyze?: boolean };
   Settings: undefined;
 };

@@ -16,9 +16,12 @@ instead of syncing through GitHub.
 - **Full-text search** across box names and every item.
 - **Photos per box** — take a photo or pick from the library, view full-screen,
   swipe between shots, reorder, caption, and delete.
-- **AI photo analysis** (optional) — point Claude at a box photo and it lists
-  the visible items and drafts a caption you can review before saving. Bring
-  your own Anthropic API key; it's stored only in the device keychain.
+- **AI photo sync** (optional) — when you add a new photo of a box, Claude
+  re-reads it and **compares what it sees against the box's current item list**.
+  A reconcile dialog then lets you tick which newly-seen items to **add** and
+  which now-missing items to **remove**, edit the caption, and Save (or Cancel).
+  Photos are never deleted automatically — that's up to you. Bring your own
+  Anthropic API key; it's stored only in the device keychain.
 - **Local-first** — data lives in on-device storage; photos are copied into the
   app's document directory. No account, no server.
 - **Export** — share your inventory as CSV or a full JSON backup.
