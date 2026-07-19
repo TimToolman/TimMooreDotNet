@@ -4,13 +4,13 @@ compatibility_date = "2026-01-01"
 
 # Non-secret, tunable settings. Change MODEL + prices together so the spend
 # cap stays accurate for the model you actually run.
-#   Opus 4.8 (default):  MODEL=claude-opus-4-8   input 5   output 25
-#   Haiku 4.5 (cheapest): MODEL=claude-haiku-4-5  input 1   output 5
+#   Haiku 4.5 (default, cheapest): MODEL=claude-haiku-4-5  input 1   output 5
+#   Opus 4.8 (highest quality):    MODEL=claude-opus-4-8   input 5   output 25
 [vars]
 MONTHLY_BUDGET_USD = "100"
-MODEL = "claude-opus-4-8"
-PRICE_INPUT_PER_MTOK = "5"
-PRICE_OUTPUT_PER_MTOK = "25"
+MODEL = "claude-haiku-4-5"
+PRICE_INPUT_PER_MTOK = "1"
+PRICE_OUTPUT_PER_MTOK = "5"
 RATE_PER_MIN = "20"
 
 # KV namespace for spend + rate-limit counters.

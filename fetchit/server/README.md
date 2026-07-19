@@ -50,9 +50,10 @@ locally if you prefer), then rebuild.
   var). It resets automatically each calendar month (spend is keyed `spend:YYYY-MM`).
 - **Keep `MODEL` and the two price vars in sync** so the metered cost matches
   what Anthropic actually bills:
-  - **Opus 4.8** (default): `MODEL=claude-opus-4-8`, input `5`, output `25`.
-  - **Haiku 4.5** (≈5× cheaper, great for photo→items): `MODEL=claude-haiku-4-5`,
+  - **Haiku 4.5** (default — cheapest, great for photo→items): `MODEL=claude-haiku-4-5`,
     `PRICE_INPUT_PER_MTOK=1`, `PRICE_OUTPUT_PER_MTOK=5`.
+  - **Opus 4.8** (highest quality, ≈5× the cost): `MODEL=claude-opus-4-8`,
+    `PRICE_INPUT_PER_MTOK=5`, `PRICE_OUTPUT_PER_MTOK=25`.
 - The cap is a safety valve, not accounting. Under bursts KV's eventual
   consistency can let spend overshoot by a few cents; for exact atomicity swap
   the KV counter for a Durable Object. Always confirm real spend in the

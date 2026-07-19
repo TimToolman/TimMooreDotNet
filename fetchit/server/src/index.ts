@@ -14,9 +14,9 @@ export interface Env {
   ANTHROPIC_API_KEY: string; // secret — wrangler secret put ANTHROPIC_API_KEY
   BUDGET: KVNamespace; // KV namespace for spend + rate-limit counters
   MONTHLY_BUDGET_USD?: string; // default "100"
-  MODEL?: string; // default "claude-opus-4-8"
-  PRICE_INPUT_PER_MTOK?: string; // default "5"  (Opus 4.8 input)
-  PRICE_OUTPUT_PER_MTOK?: string; // default "25" (Opus 4.8 output)
+  MODEL?: string; // default "claude-haiku-4-5"
+  PRICE_INPUT_PER_MTOK?: string; // default "1" (Haiku 4.5 input)
+  PRICE_OUTPUT_PER_MTOK?: string; // default "5" (Haiku 4.5 output)
   APP_TOKEN?: string; // optional shared secret; if set, callers must send x-app-token
   RATE_PER_MIN?: string; // default "20" requests/minute/device
 }
@@ -99,7 +99,7 @@ export default {
 
     // 4. Call Anthropic with the server-held key. The prompt + schema live here
     //    so they can be tuned without shipping an app update.
-    const model = env.MODEL ?? 'claude-opus-4-8';
+    const model = env.MODEL ?? 'claude-haiku-4-5';
     const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -165,8 +165,8 @@ export default {
     }
 
     // 5. Meter spend from reported usage and persist the new monthly total.
-    const priceIn = parseFloat(env.PRICE_INPUT_PER_MTOK ?? '5');
-    const priceOut = parseFloat(env.PRICE_OUTPUT_PER_MTOK ?? '25');
+    const priceIn = parseFloat(env.PRICE_INPUT_PER_MTOK ?? '1');
+    const priceOut = parseFloat(env.PRICE_OUTPUT_PER_MTOK ?? '5');
     const inTok = data.usage?.input_tokens ?? 0;
     const outTok = data.usage?.output_tokens ?? 0;
     const cost = (inTok / 1e6) * priceIn + (outTok / 1e6) * priceOut;
