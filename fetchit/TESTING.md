@@ -1,4 +1,4 @@
-# Testing Stow-a-way
+# Testing FetchIt
 
 Two ways to run the app: **Expo Go** (fastest, for iterating) or a **standalone
 build** (a real install, closest to the store version).
@@ -15,7 +15,7 @@ Everything the app uses (camera, photo picker, secure store, file system) works
 inside Expo Go, so there's nothing to build.
 
 ```bash
-cd stow-a-way
+cd fetchit
 npm install         # first time only (the web SessionStart hook does this for you)
 npx expo start
 ```
@@ -43,7 +43,7 @@ and can be shared with testers.
 ```bash
 npm install -g eas-cli
 eas login                                   # free Expo account
-cd stow-a-way
+cd fetchit
 eas build:configure                         # first time: sets extra.eas.projectId
 eas build --platform android --profile preview
 ```

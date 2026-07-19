@@ -1,13 +1,13 @@
-# Stow-a-way — Privacy Policy
+# FetchIt — Privacy Policy
 
 _Last updated: 17 July 2026_
 
-Stow-a-way is a personal inventory app. It is designed to keep your data on your
+FetchIt is a personal inventory app. It is designed to keep your data on your
 device. This policy explains what the app does and does not collect.
 
 ## What we collect
 
-**Nothing is collected by us.** Stow-a-way has no account system, no analytics,
+**Nothing is collected by us.** FetchIt has no account system, no analytics,
 no advertising SDKs, and no backend server operated by the developer. We do not
 receive, store, or have access to your inventory, your photos, or any personal
 information.
@@ -39,7 +39,7 @@ device to Anthropic's API (`api.anthropic.com`) to identify the items in the
 image. This feature is off by default. Your use of the Anthropic API is governed
 by [Anthropic's privacy policy](https://www.anthropic.com/legal/privacy) and
 [usage policies](https://www.anthropic.com/legal/aup). The developer of
-Stow-a-way never sees this data.
+FetchIt never sees this data.
 
 ## Data sharing and export
 
@@ -49,7 +49,7 @@ choice.
 
 ## Children's privacy
 
-Stow-a-way is not directed at children under 13 and does not knowingly collect
+FetchIt is not directed at children under 13 and does not knowingly collect
 personal information from anyone.
 
 ## Changes to this policy

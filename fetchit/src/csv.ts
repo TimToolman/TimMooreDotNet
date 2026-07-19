@@ -40,9 +40,9 @@ async function shareText(content: string, filename: string, mime: string): Promi
 }
 
 export async function exportCsv(boxes: Box[]): Promise<void> {
-  await shareText(boxesToCsv(boxes), 'stow-a-way-inventory.csv', 'text/csv');
+  await shareText(boxesToCsv(boxes), 'fetchit-inventory.csv', 'text/csv');
 }
 
 export async function exportJson(boxes: Box[]): Promise<void> {
-  await shareText(boxesToJson(boxes), 'stow-a-way-backup.json', 'application/json');
+  await shareText(boxesToJson(boxes), 'fetchit-backup.json', 'application/json');
 }

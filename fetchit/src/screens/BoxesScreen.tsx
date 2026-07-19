@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { canAddBox, FREE_BOX_LIMIT } from '../limits';
+import { usePurchases } from '../purchases';
 import { useStore } from '../store';
 import { useTheme, Theme } from '../theme';
 import { Box, RootStackParamList } from '../types';
@@ -31,6 +33,7 @@ export default function BoxesScreen({ navigation }: Props) {
   const s = useMemo(() => styles(theme), [theme]);
   const insets = useSafeAreaInsets();
   const { boxes, ready, addBox } = useStore();
+  const { isPro } = usePurchases();
   const [query, setQuery] = useState('');
 
   useLayoutEffect(() => {
@@ -57,6 +60,11 @@ export default function BoxesScreen({ navigation }: Props) {
     : 0;
 
   const onAdd = () => {
+    // Free plan is capped at FREE_BOX_LIMIT boxes; past that, show the upgrade.
+    if (!canAddBox(boxes?.length ?? 0, isPro)) {
+      navigation.navigate('Paywall');
+      return;
+    }
     const id = addBox();
     navigation.navigate('BoxDetail', { boxId: id });
   };
@@ -68,6 +76,14 @@ export default function BoxesScreen({ navigation }: Props) {
         <Text style={s.meta}>
           {boxes ? `${boxes.length} boxes · ${totalItems} items` : 'Loading…'}
         </Text>
+        {ready && !isPro ? (
+          <Pressable onPress={() => navigation.navigate('Paywall')} hitSlop={6}>
+            <Text style={s.planHint}>
+              Free plan · {Math.min(boxes?.length ?? 0, FREE_BOX_LIMIT)} of {FREE_BOX_LIMIT} box ·{' '}
+              <Text style={{ color: theme.accent, fontWeight: '600' }}>Upgrade</Text>
+            </Text>
+          </Pressable>
+        ) : null}
       </View>
       <View style={s.searchWrap}>
         <TextInput
@@ -174,6 +190,7 @@ const styles = (t: Theme) =>
       textAlign: 'center',
     },
     meta: { fontSize: 13, color: t.textSecondary, marginTop: 8 },
+    planHint: { fontSize: 13, color: t.textTertiary, marginTop: 6 },
     searchWrap: { paddingHorizontal: 16, marginTop: 18 },
     search: {
       backgroundColor: t.bgSubtle,

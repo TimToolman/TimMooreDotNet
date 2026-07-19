@@ -13,8 +13,8 @@ import React, {
 import { SEED_BOXES } from './seed';
 import { Box, InventorySnapshot, Photo } from './types';
 
-const STORAGE_KEY = 'stow-a-way:inventory:v1';
-const SEEDED_KEY = 'stow-a-way:seeded:v1';
+const STORAGE_KEY = 'fetchit:inventory:v1';
+const SEEDED_KEY = 'fetchit:seeded:v1';
 const PHOTO_DIR = FileSystem.documentDirectory + 'photos/';
 
 let idCounter = 0;

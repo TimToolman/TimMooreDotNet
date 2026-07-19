@@ -5,12 +5,14 @@ import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { PurchasesProvider } from './src/purchases';
 import { StoreProvider } from './src/store';
 import { useTheme } from './src/theme';
 import { RootStackParamList } from './src/types';
 
 import BoxDetailScreen from './src/screens/BoxDetailScreen';
 import BoxesScreen from './src/screens/BoxesScreen';
+import PaywallScreen from './src/screens/PaywallScreen';
 import PhotoViewerScreen from './src/screens/PhotoViewerScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 
@@ -42,7 +44,7 @@ function Navigation() {
         <Stack.Screen
           name="Boxes"
           component={BoxesScreen}
-          options={{ title: 'Stow-a-way' }}
+          options={{ title: 'FetchIt' }}
         />
         <Stack.Screen name="BoxDetail" component={BoxDetailScreen} options={{ title: 'Box' }} />
         <Stack.Screen
@@ -51,6 +53,11 @@ function Navigation() {
           options={{ headerShown: false, presentation: 'fullScreenModal', animation: 'fade' }}
         />
         <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
+        <Stack.Screen
+          name="Paywall"
+          component={PaywallScreen}
+          options={{ headerShown: false, presentation: 'modal' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -60,9 +67,11 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <StoreProvider>
-          <Navigation />
-        </StoreProvider>
+        <PurchasesProvider>
+          <StoreProvider>
+            <Navigation />
+          </StoreProvider>
+        </PurchasesProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

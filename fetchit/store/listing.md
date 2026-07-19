@@ -1,11 +1,11 @@
-# Store Listing — Stow-a-way
+# Store Listing — FetchIt
 
 Copy-ready text for App Store Connect and the Google Play Console. Adjust to
 taste before submitting.
 
 ## App name
 
-Stow-a-way
+FetchIt
 
 ## Subtitle (App Store, 30 chars max)
 
@@ -22,9 +22,9 @@ photo, and search it all in seconds. Optional AI reads your photos for you.
 
 ## Full description
 
-Stow-a-way turns the "what box is that in?" scramble into a two-second search.
+FetchIt turns the "what box is that in?" scramble into a two-second search.
 
-Whether it's the garage, the attic, a storage unit, or moving boxes, Stow-a-way
+Whether it's the garage, the attic, a storage unit, or moving boxes, FetchIt
 gives every bin a number and keeps a searchable list of what's inside.
 
 WHAT YOU CAN DO
@@ -37,7 +37,7 @@ WHAT YOU CAN DO
 • Export your whole inventory as a CSV spreadsheet or a JSON backup.
 
 SMART PHOTO ANALYSIS (OPTIONAL)
-Add your own Anthropic API key and Stow-a-way can look at a box photo and draft
+Add your own Anthropic API key and FetchIt can look at a box photo and draft
 the item list for you — you review and edit before anything is saved.
 
 PRIVATE BY DESIGN
@@ -65,8 +65,14 @@ https://timmoore.net
 
 ## Privacy policy URL
 
-Host `store/PRIVACY.md` somewhere public (e.g. https://timmoore.net/stow-a-way-privacy)
+Host `store/PRIVACY.md` somewhere public (e.g. https://timmoore.net/fetchit-privacy)
 and use that URL. Both stores require a reachable privacy-policy URL.
+
+## In-app purchases
+
+- **FetchIt Unlimited** — one-time, non-consumable — unlocks unlimited boxes.
+  Product id `net.timmoore.fetchit.pro_unlimited`. The free tier includes 1 box.
+  See `MONETIZATION.md` for setup.
 
 ## Age rating
 

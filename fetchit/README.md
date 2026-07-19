@@ -1,11 +1,11 @@
-# Stow-a-way
+# FetchIt
 
 A private, local-first mobile app for cataloging what's in your boxes and bins.
 Search every item, snap a photo of a box's contents, and let AI list what's
 inside. Built with **Expo / React Native** so a single codebase ships to both
 the **Apple App Store** and **Google Play**.
 
-Stow-a-way is the standalone version of the "Garage Boxes" tab from
+FetchIt is the standalone version of the "Garage Boxes" tab from
 [timmoore.net](https://timmoore.net) — reworked to store everything on-device
 instead of syncing through GitHub.
 
@@ -26,11 +26,14 @@ instead of syncing through GitHub.
   app's document directory. No account, no server.
 - **Export** — share your inventory as CSV or a full JSON backup.
 - **Light & dark** — follows the system appearance.
+- **Freemium** — free for 1 box; a one-time "FetchIt Unlimited" purchase lifts
+  the limit. See [`MONETIZATION.md`](./MONETIZATION.md) (ships with a testable
+  stub; wire up RevenueCat before release).
 
 ## Project layout
 
 ```
-stow-a-way/
+fetchit/
 ├── App.tsx                 Navigation shell (native stack)
 ├── app.json                Expo config: name, bundle IDs, icons, permissions
 ├── eas.json                EAS Build & Submit profiles for both stores
@@ -59,7 +62,7 @@ Prerequisites: Node 18+, and the [Expo Go](https://expo.dev/go) app on your
 phone (or an iOS Simulator / Android emulator).
 
 ```bash
-cd stow-a-way
+cd fetchit
 npm install
 npm start          # scan the QR code with Expo Go
 # or: npm run ios / npm run android
@@ -69,7 +72,7 @@ npm start          # scan the QR code with Expo Go
 
 ## Build for the stores (EAS)
 
-Stow-a-way uses [EAS Build](https://docs.expo.dev/build/introduction/) to
+FetchIt uses [EAS Build](https://docs.expo.dev/build/introduction/) to
 produce store binaries in the cloud — no local Xcode/Android Studio required.
 
 ```bash
@@ -87,7 +90,7 @@ eas build --platform all --profile production
 Before the first production build:
 
 1. **Bump identifiers if needed.** The app ships with
-   `net.timmoore.stowaway` for both `ios.bundleIdentifier` and
+   `net.timmoore.fetchit` for both `ios.bundleIdentifier` and
    `android.package` in `app.json`. Change these to your own reverse-domain
    identifier if you're publishing under a different account.
 2. **Apple**: enrol in the [Apple Developer Program](https://developer.apple.com/programs/)

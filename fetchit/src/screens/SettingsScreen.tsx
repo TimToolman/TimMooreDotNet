@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import { exportCsv, exportJson } from '../csv';
+import { usePurchases } from '../purchases';
 import { clearApiKey, getApiKey, setApiKey } from '../settings';
 import { useStore } from '../store';
 import { Theme, useTheme } from '../theme';
@@ -20,10 +21,11 @@ import { RootStackParamList } from '../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
-export default function SettingsScreen(_props: Props) {
+export default function SettingsScreen({ navigation }: Props) {
   const theme = useTheme();
   const s = useMemo(() => styles(theme), [theme]);
   const { boxes, resetToSeed, clearAll } = useStore();
+  const { isPro, priceLabel, restore, resetPro } = usePurchases();
 
   const [keyDraft, setKeyDraft] = useState('');
   const [hasKey, setHasKey] = useState(false);
@@ -66,15 +68,53 @@ export default function SettingsScreen(_props: Props) {
       { text: 'Delete all', style: 'destructive', onPress: clearAll },
     ]);
 
+  const onRestore = async () => {
+    const ok = await restore();
+    Alert.alert(
+      ok ? 'Restored' : 'Nothing to restore',
+      ok ? 'Your upgrade is active.' : 'No previous purchase was found for this account.',
+    );
+  };
+
   const version = Constants.expoConfig?.version ?? '1.0.0';
 
   return (
     <ScrollView style={s.screen} contentContainerStyle={{ paddingBottom: 60 }}>
+      {/* Plan */}
+      <Text style={s.groupTitle}>PLAN</Text>
+      <View style={s.card}>
+        <Text style={s.status}>
+          {isPro ? '✓ FetchIt Unlimited — unlimited boxes' : 'Free plan — 1 box'}
+        </Text>
+        {isPro ? (
+          <Text style={s.body}>Thanks for supporting FetchIt.</Text>
+        ) : (
+          <>
+            <Text style={s.body}>
+              The free plan covers one box. Upgrade once for unlimited boxes and bins.
+            </Text>
+            <View style={s.row}>
+              <Pressable style={s.btn} onPress={() => navigation.navigate('Paywall')}>
+                <Text style={s.btnText}>Upgrade · {priceLabel}</Text>
+              </Pressable>
+              <Pressable style={s.btnGhost} onPress={onRestore}>
+                <Text style={[s.btnGhostText, { color: theme.accent }]}>Restore</Text>
+              </Pressable>
+            </View>
+          </>
+        )}
+        {__DEV__ ? (
+          <Pressable onPress={resetPro}>
+            <Text style={[s.link, { color: theme.textTertiary }]}>Reset purchase (dev only)</Text>
+          </Pressable>
+        ) : null}
+      </View>
+
       {/* AI */}
       <Text style={s.groupTitle}>AI PHOTO ANALYSIS</Text>
       <View style={s.card}>
         <Text style={s.body}>
-          Add an Anthropic API key to let Stow-a-way identify the items in your photos
+          Add an Anthropic API key to let FetchIt identify the items in your photos
           automatically. The key is stored only on this device, in the secure keychain, and is
           sent only to Anthropic.
         </Text>
@@ -137,7 +177,7 @@ export default function SettingsScreen(_props: Props) {
       {/* About */}
       <Text style={s.groupTitle}>ABOUT</Text>
       <View style={s.card}>
-        <Text style={s.aboutName}>Stow-a-way</Text>
+        <Text style={s.aboutName}>FetchIt</Text>
         <Text style={s.body}>
           A private, local-first way to catalog what's in your boxes and bins — search every item,
           snap a photo, and let AI list the contents. Your inventory lives on your device.

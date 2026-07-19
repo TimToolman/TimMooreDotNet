@@ -24,4 +24,5 @@ export type RootStackParamList = {
   BoxDetail: { boxId: string };
   PhotoViewer: { boxId: string; index: number; autoAnalyze?: boolean };
   Settings: undefined;
+  Paywall: undefined;
 };
