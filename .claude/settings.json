@@ -73,5 +73,17 @@
       "Bash(git -C /Users/tmoore/Documents/GitHub/TimMooreDotNet status -s)",
       "Bash(node --check /Users/tmoore/Documents/GitHub/TimMooreDotNet/js/version-check.js)"
     ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh"
+          }
+        ]
+      }
+    ]
   }
 }
