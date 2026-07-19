@@ -16,8 +16,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { analyzePhoto, AuthError, MissingKeyError } from '../ai';
-import { getApiKey } from '../settings';
+import { analyzePhoto, AuthError, BudgetExceededError, isAiAvailable, MissingKeyError } from '../ai';
 import { persistPhotoFile, useBox, useStore } from '../store';
 import { RootStackParamList } from '../types';
 
@@ -111,7 +110,13 @@ export default function PhotoViewerScreen({ route, navigation }: Props) {
 
       setAnalysis({ phase: 'reconcile', caption: result.caption, add, remove, detectedCount: detected.length });
     } catch (err) {
-      if (err instanceof MissingKeyError) {
+      if (err instanceof BudgetExceededError) {
+        setAnalysis({ phase: 'idle' });
+        Alert.alert(
+          'AI analysis paused',
+          'The shared AI budget for this month has been reached. It resets next month — or add your own Anthropic API key in Settings to keep going now.',
+        );
+      } else if (err instanceof MissingKeyError) {
         setAnalysis({ phase: 'idle' });
         goToKeySetup();
       } else if (err instanceof AuthError) {
@@ -129,8 +134,8 @@ export default function PhotoViewerScreen({ route, navigation }: Props) {
     if (!route.params.autoAnalyze || !current) return;
     if (autoAnalyzedFor.current === current.id) return;
     autoAnalyzedFor.current = current.id;
-    getApiKey().then((k) => {
-      if (k) runAnalysis();
+    isAiAvailable().then((ok) => {
+      if (ok) runAnalysis();
     });
   }, [route.params.autoAnalyze, current, runAnalysis]);
 
@@ -201,8 +206,7 @@ export default function PhotoViewerScreen({ route, navigation }: Props) {
     setAnalysis({ phase: 'idle' });
     setTimeout(() => listRef.current?.scrollToOffset({ offset: newIndex * width, animated: false }), 50);
     // Newly added photo → re-analyze and reconcile against the current list.
-    const key = await getApiKey();
-    if (key) {
+    if (await isAiAvailable()) {
       autoAnalyzedFor.current = null; // let the effect fire for the new photo
       setTimeout(runAnalysis, 250);
     }

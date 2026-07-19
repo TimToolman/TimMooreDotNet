@@ -1,0 +1,25 @@
+name = "fetchit-ai-proxy"
+main = "src/index.ts"
+compatibility_date = "2026-01-01"
+
+# Non-secret, tunable settings. Change MODEL + prices together so the spend
+# cap stays accurate for the model you actually run.
+#   Opus 4.8 (default):  MODEL=claude-opus-4-8   input 5   output 25
+#   Haiku 4.5 (cheapest): MODEL=claude-haiku-4-5  input 1   output 5
+[vars]
+MONTHLY_BUDGET_USD = "100"
+MODEL = "claude-opus-4-8"
+PRICE_INPUT_PER_MTOK = "5"
+PRICE_OUTPUT_PER_MTOK = "25"
+RATE_PER_MIN = "20"
+
+# KV namespace for spend + rate-limit counters.
+# Create it once with:  npx wrangler kv namespace create BUDGET
+# then paste the returned id below.
+[[kv_namespaces]]
+binding = "BUDGET"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+# Secrets are NOT set here — use:
+#   npx wrangler secret put ANTHROPIC_API_KEY
+#   npx wrangler secret put APP_TOKEN        (optional shared secret)

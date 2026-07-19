@@ -52,6 +52,7 @@
       "expo-secure-store"
     ],
     "extra": {
+      "aiProxyUrl": "https://REPLACE_WITH_YOUR_WORKER.workers.dev",
       "eas": {
         "projectId": "00000000-0000-0000-0000-000000000000"
       }

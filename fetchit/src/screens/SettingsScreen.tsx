@@ -114,12 +114,15 @@ export default function SettingsScreen({ navigation }: Props) {
       <Text style={s.groupTitle}>AI PHOTO ANALYSIS</Text>
       <View style={s.card}>
         <Text style={s.body}>
-          Add an Anthropic API key to let FetchIt identify the items in your photos
-          automatically. The key is stored only on this device, in the secure keychain, and is
-          sent only to Anthropic.
+          Photo analysis works out of the box through FetchIt's shared AI service (subject to a
+          monthly limit). Optionally add your own Anthropic API key to use your own account with no
+          shared limit — it's stored only on this device's secure keychain and sent only to
+          Anthropic.
         </Text>
         <Text style={s.status}>
-          {hasKey ? '✓ A key is saved on this device.' : 'No key saved — AI analysis is off.'}
+          {hasKey
+            ? '✓ Using your own Anthropic key.'
+            : "Using FetchIt's shared AI service."}
         </Text>
         <TextInput
           style={s.input}
