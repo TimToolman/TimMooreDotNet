@@ -272,6 +272,58 @@
     font-size: 13px;
     color: var(--p-text-tertiary);
     padding: 6px 2px 14px;
+    flex: 1 1 auto;
+}
+
+/* ---------- Day body with time rail ---------- */
+
+.paris-day-body {
+    display: flex;
+    gap: 12px;
+    padding-bottom: 8px;
+    min-height: 96px;
+}
+
+.paris-timeline {
+    flex: 0 0 34px;
+    position: relative;
+}
+
+.paris-timeline-track {
+    position: absolute;
+    top: 6px;
+    bottom: 10px;
+    right: 6px;
+    width: 2px;
+    background: #ececf0;
+    border-radius: 1px;
+}
+
+.paris-timeline-tick {
+    position: absolute;
+    right: -2px;
+    width: 6px;
+    height: 1px;
+    background: var(--p-divider);
+    transform: translateY(-0.5px);
+}
+
+.paris-timeline-label {
+    position: absolute;
+    right: 10px;
+    transform: translateY(-50%);
+    font-size: 9px;
+    line-height: 1;
+    color: var(--p-text-tertiary);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.paris-timeline-seg {
+    position: absolute;
+    left: -1px;
+    width: 4px;
+    border-radius: 2px;
 }
 
 /* ---------- Blocks ---------- */
@@ -280,7 +332,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding-bottom: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .paris-block {

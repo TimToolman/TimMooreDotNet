@@ -437,6 +437,38 @@
             });
     }
 
+    // Slim vertical time rail (8 AM – 11 PM): colored segments mark booked
+    // times, bare track reads as open time to fill. All-day items are not
+    // drawn; untimed ends get a nominal 90-minute band.
+    function timelineHtml(list) {
+        const WIN_START = 8 * 60, WIN_END = 23 * 60, SPAN = WIN_END - WIN_START;
+        let inner = '';
+        [[9, '9a'], [12, ''], [15, '3p'], [18, ''], [21, '9p']].forEach(t => {
+            const pct = ((t[0] * 60 - WIN_START) / SPAN * 100).toFixed(2);
+            inner += '<span class="paris-timeline-tick" style="top:' + pct + '%"></span>';
+            if (t[1]) inner += '<span class="paris-timeline-label" style="top:' + pct + '%">' + t[1] + '</span>';
+        });
+        list.forEach(e => {
+            if (!e.start) return;
+            const p = e.start.split(':');
+            let s = (+p[0]) * 60 + (+p[1]);
+            let en;
+            if (e.end) {
+                const q = e.end.split(':');
+                en = (+q[0]) * 60 + (+q[1]);
+            } else {
+                en = s + 90;
+            }
+            if (en <= s) en = s + 60;
+            s = Math.max(WIN_START, Math.min(s, WIN_END - 15));
+            en = Math.max(s + 20, Math.min(en, WIN_END));
+            const cat = CATEGORIES[e.category] || CATEGORIES.other;
+            inner += '<span class="paris-timeline-seg" style="top:' + ((s - WIN_START) / SPAN * 100).toFixed(2) +
+                '%;height:' + ((en - s) / SPAN * 100).toFixed(2) + '%;background:' + cat.color + ';"></span>';
+        });
+        return '<div class="paris-timeline" aria-hidden="true"><div class="paris-timeline-track">' + inner + '</div></div>';
+    }
+
     function renderDays() {
         const days = selectedDay === 'all' ? tripDays() : [selectedDay];
         let html = '';
@@ -449,6 +481,7 @@
                     countryBadge(key) + '</div>' +
                     '<button class="paris-btn paris-btn-sm paris-day-add" data-day="' + key + '" type="button">+ Add</button>' +
                 '</div>';
+            html += '<div class="paris-day-body">' + timelineHtml(list);
             if (list.length === 0) {
                 html += '<div class="paris-empty">Nothing planned yet</div>';
             } else {
@@ -456,7 +489,7 @@
                 list.forEach(e => { html += blockHtml(e); });
                 html += '</div>';
             }
-            html += '</section>';
+            html += '</div></section>';
         });
         daysEl.innerHTML = html;
 
