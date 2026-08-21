@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-21T17:00:00.000Z",
+  "updated": "2026-08-21T18:00:00.000Z",
   "events": [
     {
       "id": "dl2695",
@@ -124,12 +124,12 @@
     {
       "id": "jalesnes-checkout",
       "date": "2026-09-27",
-      "start": "",
+      "start": "10:43",
       "end": "",
       "category": "train",
       "title": "Check out · Train to Paris — Saumur → Paris Montparnasse",
       "location": "Gare de Saumur",
-      "notes": "Check out of Château de Jalesnes\nSNCF · Departure time TBC — booked, confirmed by SNCF Connect\nCheck in at Le Prince Régent after 3:00 PM"
+      "notes": "Check out of Château de Jalesnes before the train\nTER 859013 connecting to TGV INOUI 8868 (1st class) · 5 passengers · €458.75\nE-ticket ref 8KS36U in the SNCF Connect app · Print tickets for refs YNV1B6, UU1594, K8VYXW, 3HFTMM, RL2H3P\nPlatform closes 2 min before departure · Check in at Le Prince Régent after 3:00 PM"
     },
     {
       "id": "dl0267",
