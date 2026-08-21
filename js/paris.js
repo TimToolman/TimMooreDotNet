@@ -306,7 +306,7 @@
             '<div class="paris-app">' +
                 '<div class="paris-hero">' +
                     '<div class="paris-eyebrow">The Moores &middot; September 19&ndash;29, 2026</div>' +
-                    '<h2 class="paris-headline">Amsterdam &amp; Paris</h2>' +
+                    '<h2 class="paris-headline">Euro Trip</h2>' +
                     '<p class="paris-subhead" id="paris-countdown"></p>' +
                     '<div class="paris-cta-row">' +
                         '<button class="paris-btn paris-btn-primary" id="paris-add-btn" type="button">Add a plan</button>' +
