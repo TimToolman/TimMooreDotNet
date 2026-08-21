@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-21T14:00:00.000Z",
+  "updated": "2026-08-21T15:00:00.000Z",
   "events": [
     {
       "id": "dl2695",
@@ -42,24 +42,54 @@
       "notes": "Eurostar Plus · Train 9340 · Coach 12, seats 72–76\nRef 6PJNJW · Arrive at station by 10:50\nArrives Paris Gare du Nord 14:39"
     },
     {
-      "id": "seed4",
+      "id": "jalesnes-checkin",
       "date": "2026-09-24",
-      "start": "09:00",
-      "end": "17:00",
-      "category": "excursion",
-      "title": "Day trip to Versailles",
-      "location": "Château de Versailles",
-      "notes": "Sample — RER C from St-Michel, about 45 minutes each way."
+      "start": "",
+      "end": "",
+      "category": "lodging",
+      "title": "Check in — Château de Jalesnes",
+      "location": "Château de Jalesnes, 10 Rue de Blou, 49390 Vernantes, France",
+      "notes": "Gîtes du Plessis — The Big Linden Tree · 3 nights (Sep 24–27)\nAccommodation for Kristen & David's wedding · Invoice F-2026-747 · €600.01\ncontact@chateaudejalesnes.com · +33 6 47 62 71 10"
     },
     {
-      "id": "seed5",
-      "date": "2026-09-27",
-      "start": "11:00",
+      "id": "jalesnes-welcome",
+      "date": "2026-09-24",
+      "start": "19:00",
       "end": "",
       "category": "event",
-      "title": "Louvre timed entry",
-      "location": "Musée du Louvre, Rue de Rivoli",
-      "notes": "Sample — book timed tickets ahead."
+      "title": "Welcome party at the château",
+      "location": "Château de Jalesnes, Vernantes",
+      "notes": "Evening — exact time TBC"
+    },
+    {
+      "id": "jalesnes-dinner",
+      "date": "2026-09-25",
+      "start": "19:00",
+      "end": "",
+      "category": "dinner",
+      "title": "Wedding party dinner",
+      "location": "Château de Jalesnes, Vernantes",
+      "notes": "Evening — exact time TBC · Day open before"
+    },
+    {
+      "id": "jalesnes-wedding",
+      "date": "2026-09-26",
+      "start": "18:00",
+      "end": "",
+      "category": "event",
+      "title": "Kristen & David's wedding",
+      "location": "Château de Jalesnes, Vernantes",
+      "notes": "Evening — exact time TBC · Day open before"
+    },
+    {
+      "id": "jalesnes-checkout",
+      "date": "2026-09-27",
+      "start": "",
+      "end": "",
+      "category": "train",
+      "title": "Check out — return to Paris",
+      "location": "Château de Jalesnes, Vernantes",
+      "notes": "Train details to come"
     },
     {
       "id": "dl0267",
