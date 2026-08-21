@@ -309,7 +309,7 @@
                     '<h2 class="paris-headline">Euro Trip</h2>' +
                     '<p class="paris-subhead" id="paris-countdown"></p>' +
                     '<div class="paris-cta-row">' +
-                        '<button class="paris-btn paris-btn-primary" id="paris-add-btn" type="button">Add a plan</button>' +
+                        '<button class="paris-btn paris-btn-primary" id="paris-add-btn" type="button">Add an Event</button>' +
                     '</div>' +
                 '</div>' +
                 '<div class="paris-daybar" id="paris-daybar"></div>' +
@@ -318,10 +318,10 @@
             '</div>' +
             '<div class="paris-modal" id="paris-modal" style="display:none;">' +
                 '<div class="paris-modal-backdrop"></div>' +
-                '<div class="paris-sheet" role="dialog" aria-modal="true" aria-label="Edit plan">' +
+                '<div class="paris-sheet" role="dialog" aria-modal="true" aria-label="Edit event">' +
                     '<div class="paris-sheet-head">' +
                         '<button class="paris-btn-text" id="paris-cancel" type="button">Cancel</button>' +
-                        '<div class="paris-sheet-title" id="paris-sheet-title">New Plan</div>' +
+                        '<div class="paris-sheet-title" id="paris-sheet-title">New Event</div>' +
                         '<button class="paris-btn-text paris-btn-strong" id="paris-save" type="button">Save</button>' +
                     '</div>' +
                     '<div class="paris-sheet-body">' +
@@ -349,7 +349,7 @@
                         '<label class="paris-label" for="paris-f-notes">Details</label>' +
                         '<textarea class="paris-input paris-textarea" id="paris-f-notes" rows="4" placeholder="Confirmation numbers, door codes, reservation times, who&rsquo;s going&hellip;"></textarea>' +
                         '<div class="paris-sheet-footer">' +
-                            '<button class="paris-btn paris-btn-danger" id="paris-delete" type="button">Delete Plan</button>' +
+                            '<button class="paris-btn paris-btn-danger" id="paris-delete" type="button">Delete Event</button>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
@@ -397,7 +397,7 @@
 
     function renderAll() {
         document.getElementById('paris-countdown').textContent =
-            countdownText() + ' · ' + events.length + (events.length === 1 ? ' plan' : ' plans');
+            countdownText() + ' · ' + events.length + (events.length === 1 ? ' event' : ' events');
         renderDayBar();
         renderDays();
         renderStatus();
@@ -543,7 +543,7 @@
 
     function openModal(existing, presetDay) {
         editing = existing || null;
-        document.getElementById('paris-sheet-title').textContent = existing ? 'Edit Plan' : 'New Plan';
+        document.getElementById('paris-sheet-title').textContent = existing ? 'Edit Event' : 'New Event';
         document.getElementById('paris-delete').style.display = existing ? '' : 'none';
         document.getElementById('paris-f-title').value = existing ? (existing.title || '') : '';
         document.getElementById('paris-f-date').value = existing ? existing.date :
@@ -602,12 +602,12 @@
             btn.textContent = 'Tap again to delete';
             setTimeout(() => {
                 delete btn.dataset.confirming;
-                btn.textContent = 'Delete Plan';
+                btn.textContent = 'Delete Event';
             }, 2500);
             return;
         }
         delete btn.dataset.confirming;
-        btn.textContent = 'Delete Plan';
+        btn.textContent = 'Delete Event';
         events = events.filter(e => e.id !== editing.id);
         closeModal();
         renderAll();
