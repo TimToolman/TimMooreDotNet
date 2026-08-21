@@ -16,8 +16,8 @@
     const LS_KEY = 'paris-trip-v1';
     const API = 'https://api.github.com/repos/' + OWNER + '/' + REPO;
 
-    const TRIP_START = '2026-09-21';
-    const TRIP_END = '2026-09-30';
+    const TRIP_START = '2026-09-19';
+    const TRIP_END = '2026-09-29';
 
     const CATEGORIES = {
         lodging:   { label: 'Lodging',   color: '#5856d6' },
@@ -44,11 +44,12 @@
     // Built-in seed for the very first load, before data/paris-trip.json
     // exists on the site. Mirrors the seed committed in that file.
     const DEFAULT_EVENTS = [
-        { id: 'seed1', date: '2026-09-21', start: '10:35', end: '', category: 'flight', title: 'Arrive Paris CDG', location: 'Charles de Gaulle Airport, Terminal 2E', notes: 'Sample entry — tap to replace with your real flight details.' },
-        { id: 'seed2', date: '2026-09-21', start: '15:00', end: '', category: 'lodging', title: 'Airbnb check-in — Le Marais', location: 'Rue des Archives, 75004 Paris', notes: 'Sample — add your Airbnb address, host contact, and door codes.' },
-        { id: 'seed3', date: '2026-09-21', start: '19:30', end: '21:30', category: 'dinner', title: 'Welcome dinner', location: 'Chez Janou, 2 Rue Roger Verlomme, 75003 Paris', notes: 'Sample — swap in your reservation.' },
-        { id: 'seed4', date: '2026-09-24', start: '09:00', end: '17:00', category: 'excursion', title: 'Day trip to Versailles', location: 'Château de Versailles', notes: 'Sample — RER C from St-Michel, about 45 minutes each way.' },
-        { id: 'seed5', date: '2026-09-27', start: '11:00', end: '', category: 'event', title: 'Louvre timed entry', location: 'Musée du Louvre, Rue de Rivoli', notes: 'Sample — book timed tickets ahead.' }
+        { id: 'dl2695', date: '2026-09-19', start: '16:21', end: '19:15', category: 'flight', title: 'Delta DL2695 — New Orleans → Minneapolis', location: 'Louis Armstrong New Orleans International Airport (MSY)', notes: 'Confirmation JKTJCI · Arrives MSP 7:15 PM' },
+        { id: 'dl0162', date: '2026-09-19', start: '19:55', end: '', category: 'flight', title: 'Delta DL0162 — Minneapolis → Amsterdam', location: 'Minneapolis–St. Paul International Airport (MSP)', notes: 'Overnight flight · Confirmation JKTJCI\nArrives Amsterdam Schiphol Sun, Sep 20 at 11:10 AM' },
+        { id: 'amsarrive', date: '2026-09-20', start: '11:10', end: '', category: 'flight', title: 'Arrive Amsterdam Schiphol', location: 'Amsterdam Airport Schiphol (AMS)', notes: 'DL0162 from MSP · Confirmation JKTJCI' },
+        { id: 'eurostar0923', date: '2026-09-23', start: '11:10', end: '14:39', category: 'train', title: 'Eurostar to Paris — Amsterdam → Gare du Nord', location: 'Amsterdam Centraal Station', notes: 'Eurostar Plus · Train 9340 · Coach 12, seats 72–76\nRef 6PJNJW · Arrive at station by 10:50\nArrives Paris Gare du Nord 14:39' },
+        { id: 'dl0267', date: '2026-09-29', start: '09:30', end: '11:54', category: 'flight', title: 'Delta DL0267 — Paris CDG → New York JFK', location: 'Charles de Gaulle Airport (CDG)', notes: 'Confirmation JKTJCI · Arrives JFK 11:54 AM local' },
+        { id: 'dl1387', date: '2026-09-29', start: '15:29', end: '18:00', category: 'flight', title: 'Delta DL1387 — New York JFK → New Orleans', location: 'John F. Kennedy International Airport (JFK)', notes: 'Confirmation JKTJCI · Lands MSY 6:00 PM' }
     ];
 
     let events = null;
@@ -126,7 +127,8 @@
             return n + (n === 1 ? ' day to go' : ' days to go');
         }
         if (today <= end) {
-            return 'Day ' + (Math.round((today - start) / dayMs) + 1) + ' of 10';
+            const total = Math.round((end - start) / dayMs) + 1;
+            return 'Day ' + (Math.round((today - start) / dayMs) + 1) + ' of ' + total;
         }
         return 'Trip complete';
     }
@@ -250,8 +252,8 @@
         root.innerHTML =
             '<div class="paris-app">' +
                 '<div class="paris-hero">' +
-                    '<div class="paris-eyebrow">The Moores &middot; September 21&ndash;30, 2026</div>' +
-                    '<h2 class="paris-headline">Paris</h2>' +
+                    '<div class="paris-eyebrow">The Moores &middot; September 19&ndash;29, 2026</div>' +
+                    '<h2 class="paris-headline">Amsterdam &amp; Paris</h2>' +
                     '<p class="paris-subhead" id="paris-countdown"></p>' +
                     '<div class="paris-cta-row">' +
                         '<button class="paris-btn paris-btn-primary" id="paris-add-btn" type="button">Add a plan</button>' +
