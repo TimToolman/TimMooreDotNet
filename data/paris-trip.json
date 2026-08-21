@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-21T15:00:00.000Z",
+  "updated": "2026-08-21T17:00:00.000Z",
   "events": [
     {
       "id": "dl2695",
@@ -32,6 +32,36 @@
       "notes": "DL0162 from MSP · Confirmation JKTJCI"
     },
     {
+      "id": "ams-airbnb",
+      "date": "2026-09-20",
+      "start": "16:00",
+      "end": "",
+      "category": "lodging",
+      "title": "Airbnb check-in — De Pijp, Amsterdam",
+      "location": "Ceintuurbaan 418, 1074 XK Amsterdam, Netherlands",
+      "notes": "Prachtig groot appartement in De Pijp · Entire home, hosted by Max\n3 nights (Sep 20–23) · Check-in after 4:00 PM · Checkout Wed by 10:00 AM"
+    },
+    {
+      "id": "celtic",
+      "date": "2026-09-23",
+      "start": "15:00",
+      "end": "",
+      "category": "lodging",
+      "title": "Check in — Hotel Celtic, Paris",
+      "location": "Hotel Celtic, 15 rue d'Odessa, 75014 Paris, France",
+      "notes": "1 night · 3 double rooms · 5 adults · Confirmation 6574912292\nCheck-in 3:00 PM–midnight · Checkout Thu by 11:00 AM\n+33 1 43 20 93 53 · €553 total incl. €13 city tax · Breakfast €12/person"
+    },
+    {
+      "id": "princeregent",
+      "date": "2026-09-27",
+      "start": "15:00",
+      "end": "",
+      "category": "lodging",
+      "title": "Check in — Résidence & Spa Le Prince Régent",
+      "location": "Résidence & Spa Le Prince Régent, Paris",
+      "notes": "2 nights (Sep 27–29) · Check-in 3:00–4:00 PM\nCheckout Tue Sep 29 before the flight home from CDG"
+    },
+    {
       "id": "eurostar0923",
       "date": "2026-09-23",
       "start": "11:10",
@@ -40,6 +70,16 @@
       "title": "Eurostar to Paris — Amsterdam → Gare du Nord",
       "location": "Amsterdam Centraal Station",
       "notes": "Eurostar Plus · Train 9340 · Coach 12, seats 72–76\nRef 6PJNJW · Arrive at station by 10:50\nArrives Paris Gare du Nord 14:39"
+    },
+    {
+      "id": "sncf-out",
+      "date": "2026-09-24",
+      "start": "",
+      "end": "",
+      "category": "train",
+      "title": "Train to Saumur — Paris Montparnasse → Saumur",
+      "location": "Gare Montparnasse, Paris",
+      "notes": "SNCF · Departure time TBC — booked, confirmed by SNCF Connect\nSaumur station is about 15 min from Château de Jalesnes"
     },
     {
       "id": "jalesnes-checkin",
@@ -87,9 +127,9 @@
       "start": "",
       "end": "",
       "category": "train",
-      "title": "Check out — return to Paris",
-      "location": "Château de Jalesnes, Vernantes",
-      "notes": "Train details to come"
+      "title": "Check out · Train to Paris — Saumur → Paris Montparnasse",
+      "location": "Gare de Saumur",
+      "notes": "Check out of Château de Jalesnes\nSNCF · Departure time TBC — booked, confirmed by SNCF Connect\nCheck in at Le Prince Régent after 3:00 PM"
     },
     {
       "id": "dl0267",
