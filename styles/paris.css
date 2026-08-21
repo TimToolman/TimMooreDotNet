@@ -330,6 +330,25 @@
     white-space: pre-line;
 }
 
+.paris-block-map {
+    flex: 0 0 auto;
+    align-self: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--p-accent);
+    background: var(--p-bg-subtle);
+    transition: background 0.15s ease;
+}
+
+.paris-block-map:hover {
+    background: var(--p-accent-tint);
+    text-decoration: none;
+}
+
 .paris-block-chevron {
     flex: 0 0 auto;
     align-self: center;

@@ -40,6 +40,7 @@
     };
 
     const PIN_ICON = '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>';
+    const MAP_ICON = '<path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0l4.212 2.106Z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/>';
 
     // Built-in seed for the very first load, before data/paris-trip.json
     // exists on the site. Mirrors the seed committed in that file.
@@ -48,6 +49,11 @@
         { id: 'dl0162', date: '2026-09-19', start: '19:55', end: '', category: 'flight', title: 'Delta DL0162 — Minneapolis → Amsterdam', location: 'Minneapolis–St. Paul International Airport (MSP)', notes: 'Overnight flight · Confirmation JKTJCI\nArrives Amsterdam Schiphol Sun, Sep 20 at 11:10 AM' },
         { id: 'amsarrive', date: '2026-09-20', start: '11:10', end: '', category: 'flight', title: 'Arrive Amsterdam Schiphol', location: 'Amsterdam Airport Schiphol (AMS)', notes: 'DL0162 from MSP · Confirmation JKTJCI' },
         { id: 'eurostar0923', date: '2026-09-23', start: '11:10', end: '14:39', category: 'train', title: 'Eurostar to Paris — Amsterdam → Gare du Nord', location: 'Amsterdam Centraal Station', notes: 'Eurostar Plus · Train 9340 · Coach 12, seats 72–76\nRef 6PJNJW · Arrive at station by 10:50\nArrives Paris Gare du Nord 14:39' },
+        { id: 'jalesnes-checkin', date: '2026-09-24', start: '', end: '', category: 'lodging', title: 'Check in — Château de Jalesnes', location: 'Château de Jalesnes, 10 Rue de Blou, 49390 Vernantes, France', notes: 'Gîtes du Plessis — The Big Linden Tree · 3 nights (Sep 24–27)\nAccommodation for Kristen & David’s wedding · Invoice F-2026-747 · €600.01\ncontact@chateaudejalesnes.com · +33 6 47 62 71 10' },
+        { id: 'jalesnes-welcome', date: '2026-09-24', start: '19:00', end: '', category: 'event', title: 'Welcome party at the château', location: 'Château de Jalesnes, Vernantes', notes: 'Evening — exact time TBC' },
+        { id: 'jalesnes-dinner', date: '2026-09-25', start: '19:00', end: '', category: 'dinner', title: 'Wedding party dinner', location: 'Château de Jalesnes, Vernantes', notes: 'Evening — exact time TBC · Day open before' },
+        { id: 'jalesnes-wedding', date: '2026-09-26', start: '18:00', end: '', category: 'event', title: 'Kristen & David’s wedding', location: 'Château de Jalesnes, Vernantes', notes: 'Evening — exact time TBC · Day open before' },
+        { id: 'jalesnes-checkout', date: '2026-09-27', start: '', end: '', category: 'train', title: 'Check out — return to Paris', location: 'Château de Jalesnes, Vernantes', notes: 'Train details to come' },
         { id: 'dl0267', date: '2026-09-29', start: '09:30', end: '11:54', category: 'flight', title: 'Delta DL0267 — Paris CDG → New York JFK', location: 'Charles de Gaulle Airport (CDG)', notes: 'Confirmation JKTJCI · Arrives JFK 11:54 AM local' },
         { id: 'dl1387', date: '2026-09-29', start: '15:29', end: '18:00', category: 'flight', title: 'Delta DL1387 — New York JFK → New Orleans', location: 'John F. Kennedy International Airport (JFK)', notes: 'Confirmation JKTJCI · Lands MSY 6:00 PM' }
     ];
@@ -433,7 +439,15 @@
                 PIN_ICON + '</svg>' + esc(e.location) + '</a>';
         }
         if (e.notes) html += '<div class="paris-block-notes">' + esc(e.notes) + '</div>';
-        html += '</div><div class="paris-block-chevron">&rsaquo;</div></div>';
+        html += '</div>';
+        if (e.location) {
+            html += '<a class="paris-block-map" target="_blank" rel="noopener" ' +
+                'href="https://maps.google.com/?q=' + encodeURIComponent(e.location) + '" ' +
+                'title="Open in Maps" aria-label="Open in Maps">' +
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                MAP_ICON + '</svg></a>';
+        }
+        html += '<div class="paris-block-chevron">&rsaquo;</div></div>';
         return html;
     }
 
