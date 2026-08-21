@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-21T18:00:00.000Z",
+  "updated": "2026-08-21T19:00:00.000Z",
   "events": [
     {
       "id": "dl2695",
@@ -74,12 +74,12 @@
     {
       "id": "sncf-out",
       "date": "2026-09-24",
-      "start": "",
+      "start": "12:30",
       "end": "",
       "category": "train",
       "title": "Train to Saumur — Paris Montparnasse → Saumur",
       "location": "Gare Montparnasse, Paris",
-      "notes": "SNCF · Departure time TBC — booked, confirmed by SNCF Connect\nSaumur station is about 15 min from Château de Jalesnes"
+      "notes": "SNCF · 5 passengers · €288.75\nRefs ZIY6T3, RZTUI2, AFE9QL, FJJN8Q, MAWA61, QVS4C1 — tickets in the SNCF Connect app\nPlatform closes 2 min before departure · Saumur station is about 15 min from Château de Jalesnes"
     },
     {
       "id": "jalesnes-checkin",
