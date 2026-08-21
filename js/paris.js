@@ -476,8 +476,8 @@
             const list = eventsFor(key);
             html += '<section class="paris-day">' +
                 '<div class="paris-day-head">' +
-                    '<div class="paris-day-head-left"><span class="paris-day-name">' + dayName(key) + '</span>' +
-                    '<span class="paris-day-date">' + dayLabel(key) + '</span>' +
+                    '<div class="paris-day-head-left"><span class="paris-day-name">' + dayName(key).slice(0, 3) + '</span>' +
+                    '<span class="paris-day-date">' + parseDate(key).getDate() + '</span>' +
                     countryBadge(key) + '</div>' +
                     '<button class="paris-btn paris-btn-sm paris-day-add" data-day="' + key + '" type="button">+ Add</button>' +
                 '</div>';
