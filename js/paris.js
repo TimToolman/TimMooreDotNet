@@ -19,6 +19,22 @@
     const TRIP_START = '2026-09-19';
     const TRIP_END = '2026-09-29';
 
+    // Which country each day is spent in; travel:true renders "Travel → XX"
+    // (destination country) on days spent in transit.
+    const DAY_COUNTRIES = {
+        '2026-09-19': { cc: 'NL', travel: true },  // MSY → MSP → overnight to AMS
+        '2026-09-20': { cc: 'NL' },                // land Amsterdam 11:10 AM
+        '2026-09-21': { cc: 'NL' },
+        '2026-09-22': { cc: 'NL' },
+        '2026-09-23': { cc: 'FR', travel: true },  // Eurostar Amsterdam → Paris
+        '2026-09-24': { cc: 'FR', travel: true },  // Paris → Château de Jalesnes
+        '2026-09-25': { cc: 'FR' },
+        '2026-09-26': { cc: 'FR' },
+        '2026-09-27': { cc: 'FR', travel: true },  // Loire → Paris
+        '2026-09-28': { cc: 'FR' },
+        '2026-09-29': { cc: 'US', travel: true }   // CDG → JFK → MSY
+    };
+
     const CATEGORIES = {
         lodging:   { label: 'Lodging',   color: '#5856d6' },
         dinner:    { label: 'Dining',    color: '#c93400' },
@@ -248,6 +264,37 @@
             .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
+    // Flat mini flags drawn as plain rects — no gradients, no detail.
+    function flagSvg(cc, w, h) {
+        let rects = '';
+        if (cc === 'NL') {
+            rects = '<rect width="' + w + '" height="' + h + '" fill="#AE1C28"/>' +
+                '<rect y="' + (h / 3) + '" width="' + w + '" height="' + (h / 3) + '" fill="#ffffff"/>' +
+                '<rect y="' + (2 * h / 3) + '" width="' + w + '" height="' + (h / 3) + '" fill="#21468B"/>';
+        } else if (cc === 'FR') {
+            rects = '<rect width="' + (w / 3) + '" height="' + h + '" fill="#0055A4"/>' +
+                '<rect x="' + (w / 3) + '" width="' + (w / 3) + '" height="' + h + '" fill="#ffffff"/>' +
+                '<rect x="' + (2 * w / 3) + '" width="' + (w / 3) + '" height="' + h + '" fill="#EF4135"/>';
+        } else { // US — stripes plus canton, stars omitted at this size
+            rects = '<rect width="' + w + '" height="' + h + '" fill="#B22234"/>';
+            const stripe = h / 13;
+            for (let i = 1; i < 13; i += 2) {
+                rects += '<rect y="' + (i * stripe) + '" width="' + w + '" height="' + stripe + '" fill="#ffffff"/>';
+            }
+            rects += '<rect width="' + (w * 0.4) + '" height="' + (h * 7 / 13) + '" fill="#3C3B6E"/>';
+        }
+        return '<svg class="paris-flag" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" aria-hidden="true">' + rects + '</svg>';
+    }
+
+    function countryBadge(key) {
+        const info = DAY_COUNTRIES[key];
+        if (!info) return '';
+        const flag = flagSvg(info.cc, 18, 12);
+        const text = info.travel ? 'Travel &rarr; ' + info.cc : info.cc;
+        return '<span class="paris-day-country' + (info.travel ? ' paris-day-country-travel' : '') + '">' +
+            flag + '<span>' + text + '</span></span>';
+    }
+
     function icon(name, size) {
         return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" ' +
             'stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
@@ -361,10 +408,13 @@
             '" data-day="all" type="button">All<br>Days</button>';
         tripDays().forEach(key => {
             const c = chipLabel(key);
+            const info = DAY_COUNTRIES[key];
             html += '<button class="paris-day-chip' + (selectedDay === key ? ' active' : '') +
                 '" data-day="' + key + '" type="button">' +
                 '<span class="paris-chip-wd">' + c.wd + '</span>' +
-                '<span class="paris-chip-num">' + c.num + '</span></button>';
+                '<span class="paris-chip-num">' + c.num + '</span>' +
+                (info ? '<span class="paris-chip-flag">' + flagSvg(info.cc, 13, 9) + '</span>' : '') +
+                '</button>';
         });
         dayBarEl.innerHTML = html;
         dayBarEl.querySelectorAll('.paris-day-chip').forEach(chip => {
@@ -394,8 +444,9 @@
             const list = eventsFor(key);
             html += '<section class="paris-day">' +
                 '<div class="paris-day-head">' +
-                    '<div><span class="paris-day-name">' + dayName(key) + '</span>' +
-                    '<span class="paris-day-date">' + dayLabel(key) + '</span></div>' +
+                    '<div class="paris-day-head-left"><span class="paris-day-name">' + dayName(key) + '</span>' +
+                    '<span class="paris-day-date">' + dayLabel(key) + '</span>' +
+                    countryBadge(key) + '</div>' +
                     '<button class="paris-btn paris-btn-sm paris-day-add" data-day="' + key + '" type="button">+ Add</button>' +
                 '</div>';
             if (list.length === 0) {

@@ -152,7 +152,7 @@
     justify-content: center;
     gap: 2px;
     width: 52px;
-    height: 56px;
+    height: 66px;
     background: var(--p-bg);
     border: 1px solid var(--p-divider);
     border-radius: 14px;
@@ -190,6 +190,52 @@
     font-weight: 600;
     letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
+}
+
+.paris-chip-flag {
+    display: flex;
+    line-height: 0;
+    margin-top: 1px;
+}
+
+/* ---------- Country badge ---------- */
+
+.paris-flag {
+    border-radius: 2.5px;
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+    flex: 0 0 auto;
+}
+
+.paris-day-head-left {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+}
+
+.paris-day-head-left .paris-day-date { margin-left: 0; }
+
+.paris-day-country {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: center;
+    padding: 3px 10px;
+    border: 1px solid var(--p-divider);
+    border-radius: 980px;
+    background: var(--p-bg);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--p-text-secondary);
+    white-space: nowrap;
+}
+
+.paris-day-country-travel {
+    background: var(--p-bg-subtle);
+    border-color: transparent;
+    color: var(--p-text);
 }
 
 /* ---------- Day sections ---------- */
