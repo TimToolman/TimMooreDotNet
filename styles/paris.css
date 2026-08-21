@@ -1,0 +1,527 @@
+/*
+ * Paris Trip tab — apple.com-style itinerary.
+ * White surfaces, hairline dividers, system type, one blue accent;
+ * flat 2D category icons, no shadows or gradients.
+ */
+
+.paris-app {
+    --p-bg: #ffffff;
+    --p-bg-elevated: #fbfbfd;
+    --p-bg-subtle: #f5f5f7;
+    --p-text: #1d1d1f;
+    --p-text-secondary: #6e6e73;
+    --p-text-tertiary: #86868b;
+    --p-divider: #d2d2d7;
+    --p-accent: #0071e3;
+    --p-accent-hover: #0077ed;
+    --p-accent-tint: rgba(0, 113, 227, 0.15);
+    --p-negative: #d70015;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--p-text);
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+/* ---------- Hero ---------- */
+
+.paris-hero {
+    text-align: center;
+    padding: 24px 16px 40px;
+}
+
+.paris-eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--p-accent);
+    margin-bottom: 12px;
+}
+
+.paris-headline {
+    font-size: 56px;
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+    margin: 0;
+    color: var(--p-text);
+}
+
+.paris-subhead {
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--p-text-secondary);
+    margin: 12px 0 0;
+}
+
+.paris-cta-row {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+/* ---------- Buttons ---------- */
+
+.paris-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--p-bg);
+    border: 1px solid var(--p-divider);
+    color: var(--p-text);
+    padding: 8px 18px;
+    border-radius: 980px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.paris-btn:hover {
+    background: var(--p-bg-subtle);
+    border-color: var(--p-text-tertiary);
+}
+
+.paris-btn-primary {
+    background: var(--p-accent);
+    color: #ffffff;
+    border-color: var(--p-accent);
+}
+
+.paris-btn-primary:hover {
+    background: var(--p-accent-hover);
+    border-color: var(--p-accent-hover);
+}
+
+.paris-btn-sm {
+    padding: 5px 13px;
+    font-size: 12px;
+}
+
+.paris-btn-text {
+    background: transparent;
+    border: none;
+    color: var(--p-accent);
+    padding: 4px 8px;
+    font-size: 15px;
+    font-weight: 400;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.15s;
+}
+
+.paris-btn-text:hover { opacity: 0.7; }
+
+.paris-btn-strong { font-weight: 600; }
+
+.paris-btn-danger {
+    color: var(--p-negative);
+    border-color: var(--p-divider);
+    background: var(--p-bg);
+    width: 100%;
+}
+
+.paris-btn-danger:hover {
+    background: #fff5f5;
+    border-color: var(--p-negative);
+}
+
+/* ---------- Day bar ---------- */
+
+.paris-daybar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px 16px 20px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--p-bg-subtle);
+}
+
+.paris-daybar::-webkit-scrollbar { display: none; }
+
+.paris-day-chip {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    width: 52px;
+    height: 56px;
+    background: var(--p-bg);
+    border: 1px solid var(--p-divider);
+    border-radius: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--p-text);
+    transition: all 0.15s ease;
+}
+
+.paris-day-chip:hover { background: var(--p-bg-subtle); }
+
+.paris-day-chip.active {
+    background: var(--p-text);
+    border-color: var(--p-text);
+    color: #ffffff;
+}
+
+.paris-day-chip-all {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.25;
+}
+
+.paris-chip-wd {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--p-text-tertiary);
+}
+
+.paris-day-chip.active .paris-chip-wd { color: rgba(255, 255, 255, 0.7); }
+
+.paris-chip-num {
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Day sections ---------- */
+
+.paris-day {
+    padding: 20px 16px 8px;
+}
+
+.paris-day-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--p-divider);
+    margin-bottom: 12px;
+}
+
+.paris-day-name {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--p-text);
+}
+
+.paris-day-date {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--p-text-secondary);
+    margin-left: 8px;
+}
+
+.paris-empty {
+    font-size: 13px;
+    color: var(--p-text-tertiary);
+    padding: 6px 2px 14px;
+}
+
+/* ---------- Blocks ---------- */
+
+.paris-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 8px;
+}
+
+.paris-block {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--p-bg-elevated);
+    border: 1px solid #ececf0;
+    border-radius: 14px;
+    padding: 13px 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.paris-block:hover {
+    background: var(--p-bg-subtle);
+    border-color: var(--p-divider);
+}
+
+.paris-block-icon {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cat-color, var(--p-text-secondary));
+    background: color-mix(in srgb, var(--cat-color, #6e6e73) 11%, #ffffff);
+    margin-top: 2px;
+}
+
+/* Fallback for browsers without color-mix */
+@supports not (background: color-mix(in srgb, red 10%, white)) {
+    .paris-block-icon { background: var(--p-bg-subtle); }
+}
+
+.paris-block-main {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.paris-block-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 1px;
+}
+
+.paris-block-time {
+    font-size: 13px;
+    color: var(--p-text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.paris-block-cat {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.paris-block-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+    color: var(--p-text);
+    overflow-wrap: break-word;
+}
+
+.paris-block-loc {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--p-accent);
+    text-decoration: none;
+    margin-top: 2px;
+    overflow-wrap: anywhere;
+}
+
+.paris-block-loc:hover { text-decoration: underline; }
+
+.paris-block-loc svg { flex: 0 0 auto; }
+
+.paris-block-notes {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--p-text-secondary);
+    margin-top: 3px;
+    white-space: pre-line;
+}
+
+.paris-block-chevron {
+    flex: 0 0 auto;
+    align-self: center;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--p-divider);
+    padding-left: 2px;
+}
+
+/* ---------- Status ---------- */
+
+.paris-status {
+    text-align: center;
+    font-size: 12px;
+    color: var(--p-text-tertiary);
+    padding: 20px 16px 4px;
+}
+
+/* ---------- Modal sheet ---------- */
+
+.paris-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.paris-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.paris-sheet {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #1d1d1f;
+}
+
+.paris-sheet-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 12px;
+    border-bottom: 1px solid #f5f5f7;
+}
+
+.paris-sheet-title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.paris-sheet-body {
+    padding: 16px 20px 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.paris-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1d1d1f;
+    margin: 14px 0 6px;
+}
+
+.paris-sheet-body .paris-label:first-child { margin-top: 0; }
+
+.paris-input {
+    background: #ffffff;
+    border: 1px solid #d2d2d7;
+    color: #1d1d1f;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.paris-input:focus {
+    outline: none;
+    border-color: #0071e3;
+    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+}
+
+select.paris-input {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236e6e73' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 30px;
+}
+
+.paris-textarea {
+    resize: vertical;
+    min-height: 84px;
+    line-height: 1.45;
+}
+
+.paris-help {
+    font-size: 12px;
+    color: #6e6e73;
+    margin-top: 6px;
+}
+
+.paris-field-row {
+    display: flex;
+    gap: 10px;
+}
+
+.paris-field { flex: 1 1 0; min-width: 0; }
+
+.paris-field .paris-label { margin-top: 14px; }
+
+.paris-cat-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.paris-cat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 13px;
+    border-radius: 980px;
+    border: 1px solid #d2d2d7;
+    background: #ffffff;
+    color: #6e6e73;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.paris-cat-pill svg { color: var(--cat-color); }
+
+.paris-cat-pill:hover { background: #f5f5f7; }
+
+.paris-cat-pill.selected {
+    border-color: var(--cat-color);
+    color: var(--cat-color);
+    background: color-mix(in srgb, var(--cat-color) 9%, #ffffff);
+    font-weight: 500;
+}
+
+@supports not (background: color-mix(in srgb, red 10%, white)) {
+    .paris-cat-pill.selected { background: #f5f5f7; }
+}
+
+.paris-sheet-footer {
+    margin-top: 22px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 560px) {
+    .paris-headline { font-size: 44px; }
+
+    .paris-hero { padding: 12px 8px 28px; }
+
+    .paris-day { padding: 18px 4px 6px; }
+
+    .paris-daybar { padding: 4px 4px 16px; }
+
+    /* Bottom-sheet presentation on phones */
+    .paris-modal {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .paris-sheet {
+        max-width: none;
+        max-height: 92vh;
+        border-radius: 18px 18px 0 0;
+    }
+}

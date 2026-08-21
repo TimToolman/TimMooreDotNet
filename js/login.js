@@ -144,11 +144,15 @@ function handleFormSubmit() {
     
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        
+
         const username = document.getElementById('username').value.trim().toLowerCase();
         const password = document.getElementById('password').value;
 
-        if (username === 'tgmoore@gmail.com' && password === 'test1234') {
+        // Shared family password: anyone with the link can sign in with any
+        // name and the common password (case-insensitive) to see the trip.
+        const sharedEntry = password.trim().toLowerCase() === 'geauxmoores';
+
+        if ((username === 'tgmoore@gmail.com' && password === 'test1234') || sharedEntry) {
             window.location.href = 'dashboard.html';
         } else {
             const usernameError = document.getElementById('username-error');
